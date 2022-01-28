@@ -1,0 +1,45 @@
+.bg-success {
+    background-color: #0082C9 !important;
+}
+
+.bg-warning {
+    background-color: #f528a5 !important;
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #0082c9;
+    border-color: #0082c9;
+}
+
+.btn-success:hover {
+    color: #fff;
+    background-color: #f528a5;
+    border-color: #f528a5;
+}
+
+.btn-success:active {
+    color: #fff !important;
+    background-color: #0082c9 !important;
+    border-color: #0082c9 !important;
+}
+
+#main-wrapper .topbar .navbar-collapse[data-navbarbg=skin5], #main-wrapper .topbar[data-navbarbg=skin5] {
+    background: #1F262D !important;
+}
+
+#navbarSupportedContent {
+    background: #0082C9 !important;
+}
+
+.danger-icon {
+    color: red;
+}
+
+.success-icon {
+    color: green;
+}
+
+a {
+    text-decoration: none !important;
+}
