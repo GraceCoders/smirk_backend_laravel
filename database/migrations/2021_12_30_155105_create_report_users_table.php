@@ -13,13 +13,13 @@ class CreateReportUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('report_users', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('reported_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreignId('reported_to')->references('id')->on('users')->onDelete('cascade');
-            $table->tinyInteger('status')->default(1)->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('report_users', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('reported_by')->references('id')->on('users')->onDelete('cascade');
+        //     $table->foreignId('reported_to')->references('id')->on('users')->onDelete('cascade');
+        //     $table->tinyInteger('status')->default(1)->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**

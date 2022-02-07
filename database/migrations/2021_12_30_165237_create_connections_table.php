@@ -13,13 +13,13 @@ class CreateConnectionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('connections', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('sender')->references('id')->on('users')->onDelete('cascade');
-            $table->foreignId('recipient')->references('id')->on('users')->onDelete('cascade');
-            $table->tinyInteger('status')->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('connections', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('sender')->references('id')->on('users')->onDelete('cascade');
+        //     $table->foreignId('recipient')->references('id')->on('users')->onDelete('cascade');
+        //     $table->tinyInteger('status')->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**

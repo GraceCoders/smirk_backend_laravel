@@ -13,13 +13,13 @@ class CreateBlockConnectionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('block_connections', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('blocked_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreignId('blocked_to')->references('id')->on('users')->onDelete('cascade');
-            $table->tinyInteger('status')->default(1)->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('block_connections', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('blocked_by')->references('id')->on('users')->onDelete('cascade');
+        //     $table->foreignId('blocked_to')->references('id')->on('users')->onDelete('cascade');
+        //     $table->tinyInteger('status')->default(1)->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**

@@ -118,7 +118,7 @@ class UsersController extends Controller
         $userDetails = User::getUserDetails($user->id);
         $userDetails->is_registered = $user->laugh_id != null ? config('fieldstatus.active') :
             config('fieldstatus.inactive');
-        $userDetails->token = $user->createToken(env("AUTH_TOKEN_NAME"))->plainTextToken;
+        $userDetails->token = $user->createToken('SMIRK_AUTH_TOKEN')->plainTextToken;
         return $userDetails;
     }
 
@@ -309,4 +309,6 @@ class UsersController extends Controller
             $this->sendErrorOutput($exception);
         }
     }
+
+
 }

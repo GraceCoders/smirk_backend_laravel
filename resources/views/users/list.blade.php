@@ -27,15 +27,11 @@
                                     <tr>
                                         <th>Phone No.</th>
                                         <th>Full Name</th>
+                                        <th>Email</th>
+                                        <th>Date Of Birth</th>
+                                        <th>About</th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>Phone No.</th>
-                                        <th>Full Name</th>
-                                    </tr>
-                                </tfoot>
                             </table>
                         </div>
                     </div>

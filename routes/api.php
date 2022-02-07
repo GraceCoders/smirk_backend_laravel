@@ -6,7 +6,8 @@ use App\Http\Controllers\Api\v1\UsersController;
 use App\Http\Controllers\Api\v1\EthnicitiesController;
 use App\Http\Controllers\Api\v1\PreferencesController;
 use App\Http\Controllers\Api\v1\CardsController;
-
+use App\Http\Controllers\Api\v1\ShowsController;
+use App\Http\Controllers\Api\v1\UserLikeController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,15 +24,22 @@ Route::prefix('/v1')->group(function () {
         Route::post('/sign-up', [UsersController::class, 'signUp'])->name('sign-up');
         Route::post('/login', [UsersController::class, 'login'])->name('login');
         Route::post('/verify', [UsersController::class, 'verifyOTP'])->name('verify');
+        Route::get('/getShow', [ShowsController::class, 'getShow']);
+
     });
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/upload-photo', [UsersController::class, 'uploadPhoto'])->name('upload-photo');
         Route::post('/update-image', [UsersController::class, 'updateImage'])->name('update-image');
         Route::post('/update-image', [UsersController::class, 'deleteImage'])->name('update-image');
-        Route::get('/cards-list', [CardsController::class, 'cardsList'])->name('cards-list');
         Route::post('/action-on-card', [CardsController::class, 'actionOnCard'])->name('action-on-card');
         Route::post('/user-detail', [UsersController::class, 'userDetail'])->name('user-detail');
         Route::post('/update-profile', [UsersController::class, 'updateProfile'])->name('update-profile');
+        Route::get('/get-match', [CardsController::class, 'getMatch'])->name('get-match');
+        Route::post('/user-like', [UserLikeController::class, 'likeUser'])->name('user-like');
+        Route::post('/get-match-card', [CardsController::class, 'getMatchcard'])->name('get-match-card');
+        Route::get('/cards-list', [CardsController::class, 'cardsList'])->name('cards-list');
+
     });
     Route::get('/retrieve-list', [UsersController::class, 'retrieveList'])->name('retrieve-list');
+
 });

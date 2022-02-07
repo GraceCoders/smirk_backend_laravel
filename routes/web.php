@@ -70,13 +70,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::post('delete', [ShowsController::class, 'deleteShow'])->name('delete');
     });
     Route::name('cards.')->prefix('cards')->group(function () {
-        Route::get('list', function () {
-            return view('cards/list');
-        })->name('list');
+
         Route::get('add', function () {
             return view('cards/add');
         })->name('add');
-        Route::post('list', [CardsController::class, 'cardsList'])->name('list');
+        Route::get('list', [CardsController::class, 'cardsList'])->name('list');
         Route::post('add', [CardsController::class, 'addCard'])->name('add');
         Route::post('delete', [CardsController::class, 'deleteCard'])->name('delete');
     });

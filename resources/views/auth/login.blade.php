@@ -112,9 +112,9 @@
     <script>
         $('[data-toggle="tooltip"]').tooltip();
         $(".preloader").fadeOut();
-        // ============================================================== 
-        // Login and Recover Password 
-        // ============================================================== 
+        // ==============================================================
+        // Login and Recover Password
+        // ==============================================================
         $('#to-recover').on("click", function() {
             $("#loginform").slideUp();
             $("#recoverform").fadeIn();

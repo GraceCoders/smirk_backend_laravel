@@ -60,6 +60,13 @@
             {
                 data: "full_name",
             },
+            {
+                data: "email",
+            }, {
+                data: "date_of_birth",
+            }, {
+                data: "about",
+            },
         ],
     });
     var ethnicityTable = jQuery('#ethnicity-table').DataTable({
@@ -186,40 +193,44 @@
             }
         ],
     });
-    var cardTable = jQuery('#card-table').DataTable({
-        "pagingType": "numbers",
-        "responsive": true,
-        "processing": true,
-        "serverSide": true,
-        "orderable": false,
-        "ajax": {
-            "url": "{{ route('cards.list') }}",
-            "dataType": "json",
-            "type": "POST",
-            "data": function(data) {
-                var searchData = $('input[type=search]').value;
-                var statusData = $('input[type=radio]:checked').val();
-                data.searchText = searchData;
-                data.statusData = statusData;
-                data._token = '{{ csrf_token() }}';
-            }
-        },
-        columns: [{
-                "data": "card_image",
-                render: function(data, type, full, meta) {
-                    return '<img src="' + full.card_image +
-                        '",width=60px, height=60px />';
-                }
-            },
-            {
-                data: "id",
-                "render": function(data, type, full, meta) {
-                    return '<button type="submit" onClick="activateOrDeactivate(3,' + data +
-                        ',2)"><i class="fa fa-trash mr-2 " aria-hidden="true "></i></button>';
-                }
-            }
-        ],
-    });
+    // var cardTable = jQuery('#card-table').DataTable({
+    //     "pagingType": "numbers",
+    //     "responsive": true,
+    //     "processing": true,
+    //     "serverSide": true,
+    //     "orderable": false,
+    //     "ajax": {
+    //         "url": "{{ route('cards.list') }}",
+    //         "dataType": "json",
+    //         "type": "POST",
+    //         "data": function(data) {
+    //             var searchData = $('input[type=search]').value;
+    //             var statusData = $('input[type=radio]:checked').val();
+    //             data.searchText = searchData;
+    //             data.statusData = statusData;
+    //             data._token = '{{ csrf_token() }}';
+    //         }
+    //     },
+    //     columns: [{
+    //             "data": "card_image",
+    //             render: function(data, type, full, meta) {
+    //                 return '<img src="' + full.card_image +
+    //                     '",width=60px, height=60px />';
+    //             }
+    //         },
+    //         {
+    //             "data": "show_id"
+    //         },
+
+    //         {
+    //             data: "id",
+    //             "render": function(data, type, full, meta) {
+    //                 return '<button type="submit" onClick="activateOrDeactivate(3,' + data +
+    //                     ',2)"><i class="fa fa-trash mr-2 " aria-hidden="true "></i></button>';
+    //             }
+    //         }
+    //     ],
+    // });
 </script>
 <script>
     function checkRequestType(type) {

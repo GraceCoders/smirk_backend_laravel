@@ -35,7 +35,7 @@
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
+                                {{-- <tbody></tbody>
                                 <tfoot>
                                     <tr>
                                         <th>Title</th>
@@ -43,7 +43,7 @@
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
-                                </tfoot>
+                                </tfoot> --}}
                             </table>
                         </div>
                     </div>

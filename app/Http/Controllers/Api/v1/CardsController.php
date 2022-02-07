@@ -19,6 +19,7 @@ use App\Models\CardAction;
  */
 
 use App\Traits\OutputTrait;
+use Illuminate\Support\Facades\DB;
 
 class CardsController extends Controller
 {
@@ -29,10 +30,10 @@ class CardsController extends Controller
      * @param  Card $card
      * @return void
      */
-    public function cardsList(Card $card)
+    public function cardsList(Request $request)
     {
         try {
-            $collection = collect($card->limit(10)->get());
+            $collection = Card::where('show_id',$request->show_id)->get();
             $getData = $collection->shuffle();
             $getData->all();
             $this->sendSuccessResponse(trans("Messages.ListedSuccessfully"), $getData->toArray());
@@ -67,7 +68,7 @@ class CardsController extends Controller
             $arrData['card_action'] = $request->card_action;
             $getData = $cardAction->create($arrData);
             if ($request->is_completed == config('fieldstatus.active')) {
-                $getData = $cardAction->makeCompatibility(Auth::user()->id, $cardAction);
+                // $getData = $cardAction->makeCompatibility(Auth::user()->id, $cardAction);
                 $this->sendSuccessResponse(trans("Messages.cardActionSaved"), $getData->toArray());
             } else {
                 $this->sendSuccessResponse(trans("Messages.cardActionSaved"));
@@ -75,5 +76,66 @@ class CardsController extends Controller
         } catch (Exception $exception) {
             $this->sendErrorOutput($exception);
         }
+    }
+
+    public function getMatch(Request $request)
+    {
+        try {
+            $userid = Auth::id();
+            $data = CardAction::where('user_id', $userid)->pluck('card_id');
+            if ($data) {
+                $same = DB::table('card_actions')->where('user_id', '!=', $userid)->whereIn('card_id', $data)->where('card_action', 1)->select('user_id')->get();
+
+                if (empty($same)) {
+                    return response()->json(['statuscode' => 200, 'message' => 'You Not like and cards'], 200);
+                }
+                $users =  $same->unique('user_id');
+                $result = array();
+                foreach ($users as $value) {
+                    $new = DB::table('card_actions')->where('user_id', $value->user_id)->where('card_action', 1)->pluck('card_id');
+                    $old = DB::table('card_actions')->where('user_id', $userid)->where('card_action', 1)->pluck('card_id');
+                    $count = DB::table('card_actions')->whereIn('card_id', $data)->where('card_action', 1)->where('user_id', $value->user_id)->get();
+                    $final = count($count) /  count($old) * 100;
+                    $result =  DB::table('users')->where('id', $value->user_id)->first();
+                    $ab[] =  array(
+                        "id" => $result->id,
+                        "name" => $result->name,
+                        "email" => $result->email,
+                        "mobile" => $result->mobile,
+                        "full_name" => $result->full_name,
+                        "date_of_birth" => $result->date_of_birth,
+                        "profile_photo" => $result->profile_photo,
+                        "about" => $result->about,
+                        "latitude" => $result->latitude,
+                        "longitude" => $result->longitude,
+                        "laugh_id" => $result->laugh_id,
+                        "matching_id" => $result->matching_id,
+                        "show_id" => $result->show_id,
+                        "age_range" => $result->age_range,
+                        "max_distance" => $result->max_distance,
+                        "ethnicity_preference" => $result->ethnicity_preference,
+                        "gender" => $result->gender,
+                        "user_type" => $result->user_type,
+                        "age_preference_from" => $result->age_preference_from,
+                        "age_preference_to" => $result->age_preference_to,
+                        'percentage' => $final
+                    );
+                }
+                return response()->json(['statuscode' => 200, 'message' => 'Get match list successfully ', 'data' => $ab], 200);
+            }
+            return response()->json(['statuscode' => 400, 'message' => 'Somethinkg Went Wrong '], 400);
+        } catch (Exception $exception) {
+            $this->sendErrorOutput($exception);
+        }
+    }
+    public function getMatchcard(Request $request)
+    {
+        $userid = Auth::id();
+        $user = DB::table('card_actions')->where('user_id', $userid)->where('card_action', 1)->pluck('card_id');
+        $result = DB::table('card_actions')->whereIn('card_id', $user)->where('card_action', 1)->where('user_id', $request->user_id)->get();
+        foreach ($result as $value) {
+            $final[] = DB::table('cards')->where('id', $value->card_id)->first();
+        }
+        return response()->json(['statuscode' => 200, 'message' => 'Get card list successfully ', 'data' => $final], 200);
     }
 }

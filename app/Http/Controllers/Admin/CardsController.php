@@ -24,18 +24,11 @@ class CardsController extends Controller
      * @param  Card $card
      * @return void
      */
-    public function cardsList(Request $request, Card $card)
+    public function cardsList(Request $request)
     {
         try {
-            $formData = $request->all();
-            $limit = $formData['length'];
-            $offset = $formData['start'];
-            $ethnicitiesList['draw'] = $formData['draw'];
-            $userDetails['recordsTotal'] = $card->count();
-            $userDetails['data'] = $card->offset($offset)->limit($limit)->get();
-            $userDetails['recordsFiltered'] = $card->count();
-
-            return json_encode($userDetails);
+          $card  = Card::join('shows','cards.show_id','=','shows.id')->paginate(20);
+            return view('cards.list',compact('card'));
         } catch (Exception $exception) {
             return view('exceptions', compact('exception'));
         }
@@ -69,12 +62,11 @@ class CardsController extends Controller
         try {
             $formData = $request->all();
             unset($formData['_token']);
-            $path = [];
             if ($request->hasFile('card_image')) {
                 $storagePath = Storage::disk('public')->put('card_images', $request->file('card_image'));
-                $path['card_image'] = url('storage/' . $storagePath);
+                $formData['card_image'] = url('storage/' . $storagePath);
             }
-            $adminDetail = $card->create($path);
+            $adminDetail = $card->create($formData);
             if ($adminDetail) {
                 return redirect()->back()->with('success', 'Card added successfully');
             } else {

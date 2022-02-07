@@ -30,21 +30,27 @@
                                 <thead>
                                     <tr>
                                         <th>Card</th>
+                                        <th>Show Name</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
-                                <tfoot>
+                                <tbody>
+                                    @foreach ($card as $value)
                                     <tr>
-                                        <th>Card</th>
-                                        <th>Action</th>
+                                        <td><img src="{{$value->card_image}}" style="height: 100px; width:100px"></td>
+                                        <td>{{$value->title}}</td>
+                                        <td>Action</td>
                                     </tr>
-                                </tfoot>
+                                    @endforeach
+
+                                </tbody>
+
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
+            {{$card->links()}}
         </div>
     </div>
 @stop
