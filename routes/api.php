@@ -37,9 +37,9 @@ Route::prefix('/v1')->group(function () {
         Route::get('/get-match', [CardsController::class, 'getMatch'])->name('get-match');
         Route::post('/user-like', [UserLikeController::class, 'likeUser'])->name('user-like');
         Route::post('/get-match-card', [CardsController::class, 'getMatchcard'])->name('get-match-card');
-        Route::get('/cards-list', [CardsController::class, 'cardsList'])->name('cards-list');
 
     });
     Route::get('/retrieve-list', [UsersController::class, 'retrieveList'])->name('retrieve-list');
+    Route::get('/cards-list', [CardsController::class, 'cardsList'])->name('cards-list');
 
 });

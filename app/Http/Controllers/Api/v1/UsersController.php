@@ -180,7 +180,7 @@ class UsersController extends Controller
             $user->where('id', $userId)->update($arrData);
             $user = $user->where('id', $userId)->first();
             $user = $this->loginUser($user);
-            $this->sendSuccessResponse(trans("Messages.SignupSuccessful"));
+            $this->sendSuccessResponse(trans("Messages.SignupSuccessful"), $user->toArray());
         } catch (Exception $exception) {
             $this->sendErrorOutput($exception);
         }

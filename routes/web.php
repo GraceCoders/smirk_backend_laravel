@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\EthnicitiesController;
 use App\Http\Controllers\Admin\PreferencesController;
 use App\Http\Controllers\Admin\ShowsController;
 use App\Http\Controllers\Admin\CardsController;
+use App\Http\Controllers\Admin\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,4 +79,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::post('add', [CardsController::class, 'addCard'])->name('add');
         Route::post('delete', [CardsController::class, 'deleteCard'])->name('delete');
     });
+
+    Route::name('category.')->prefix('catgory')->group(function () {
+        Route::resource('list',CategoryController::class);
+
+    });
+
 });

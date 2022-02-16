@@ -13,6 +13,7 @@ use Exception;
 
 use App\Models\Card;
 use App\Models\CardAction;
+use App\Models\Show;
 
 /**
  * Traits
@@ -33,10 +34,16 @@ class CardsController extends Controller
     public function cardsList(Request $request)
     {
         try {
-            $collection = Card::where('show_id',$request->show_id)->get();
-            $getData = $collection->shuffle();
-            $getData->all();
-            $this->sendSuccessResponse(trans("Messages.ListedSuccessfully"), $getData->toArray());
+            $id = Auth::id();
+            $showid =   json_decode($request->show_id);
+            $show =  Show::where('id', $showid)->get();
+            $count = (50 / 100) * count($show);
+            $int = round($count);
+            $int = (int)$int;
+            $in = Card::whereIn('show_id', $showid)->take($int)->get()->toarray();
+            $not = Card::whereNotIn('show_id', $showid)->take($int)->inRandomOrder()->toarray();
+            $output = array_merge($in, $not);
+            $this->sendSuccessResponse(trans("Messages.ListedSuccessfully"), $output);
         } catch (Exception $exception) {
             $this->sendErrorOutput($exception);
         }
