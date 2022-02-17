@@ -19,6 +19,6 @@ class UserAuthenticate
         if(){
             return response()->headers->get('');
         }
-        return $next($request);
-    }
+             return $next($request);
+         }
 }

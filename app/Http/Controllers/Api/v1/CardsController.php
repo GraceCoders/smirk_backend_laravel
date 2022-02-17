@@ -20,6 +20,7 @@ use App\Models\Show;
  */
 
 use App\Traits\OutputTrait;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Illuminate\Support\Facades\DB;
 
 class CardsController extends Controller
@@ -36,14 +37,34 @@ class CardsController extends Controller
         try {
             $id = Auth::id();
             $showid =   json_decode($request->show_id);
-            $show =  Show::where('id', $showid)->get();
-            $count = (50 / 100) * count($show);
+            $show =  Card::where('show_id', $showid)->count();
+            $count = (50 / 100) * $show;
             $int = round($count);
             $int = (int)$int;
-            $in = Card::whereIn('show_id', $showid)->take($int)->get()->toarray();
-            $not = Card::whereNotIn('show_id', $showid)->take($int)->inRandomOrder()->toarray();
-            $output = array_merge($in, $not);
-            $this->sendSuccessResponse(trans("Messages.ListedSuccessfully"), $output);
+            $data = CardAction::whereIn('show_id', $showid)->get();
+            if (count($data) != 0) {
+                $uid = CardAction::where('user_id', $id)->where('card_action',1)->pluck('card_id');
+                $in = Card::whereIn('show_id', $showid)->whereNotIn('id',$uid)->limit($int)->get()->toarray();
+                $max = CardAction::where('user_id', $id)->where('card_action',1)->select('show_id', DB::raw('count(*) as total'))
+                    ->groupBy('show_id')->orderBy('total', 'desc')->first();
+                if ($max) {
+                    $next = (50 / 100) * $int;
+                    $int2 = round($next);
+                    $int3 = (int)$int2;
+                    $not = Card::whereNotIn('show_id', $showid)->whereNotIn('id',$uid)->where('show_id', $max->show_id)->limit($int3)->get()->toarray();
+                    $all = Card::whereNotIn('show_id', $showid)->whereNotIn('id',$uid)->where('show_id', '!=', $max->show_id)->limit($int3)->inRandomOrder()->get()->toarray();
+                    $output = array_merge($in, $not, $all);
+                    $paginate = new Paginator($output,count($output), 10);
+                    return response()->json(['statuscode' => 200, 'message' => 'ListedSuccessfully', 'data' => $paginate], 200);
+                } else {
+                    $all = Card::whereNotIn('show_id', $showid)->limit($int)->paginate(10)->toarray();
+                    $output = array_merge($in, $all);
+                    $paginate = new Paginator($output,count($output), 10);
+                    return response()->json(['statuscode' => 200, 'message' => 'ListedSuccessfully', 'data' => $paginate], 200);                }
+            } else {
+                $output = Card::whereIn('show_id', $showid)->paginate(10)->toarray();
+                $this->sendSuccessResponse(trans("Messages.ListedSuccessfully"), $output);
+            }
         } catch (Exception $exception) {
             $this->sendErrorOutput($exception);
         }
@@ -69,10 +90,12 @@ class CardsController extends Controller
     {
         try {
             $this->validateRequest($request->all(), $this->validateCardAction());
+            $show =  Card::where('card_id', $request->card_id)->first();
             $arrData = $request->all();
             $arrData['user_id'] = Auth::user()->id;
             $arrData['card_id'] = $request->card_id;
             $arrData['card_action'] = $request->card_action;
+            $arrData['show_id'] = $show->id;
             $getData = $cardAction->create($arrData);
             if ($request->is_completed == config('fieldstatus.active')) {
                 // $getData = $cardAction->makeCompatibility(Auth::user()->id, $cardAction);

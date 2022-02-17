@@ -13,6 +13,7 @@ class CardAction extends Model
         'card_id',
         'user_id',
         'card_action',
+        'show_id'
     ];
 
     public function user()
