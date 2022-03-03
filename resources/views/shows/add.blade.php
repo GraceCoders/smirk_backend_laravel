@@ -31,7 +31,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <form class="form-horizontal col-6" action="{{ route('shows.add') }}" method="post">
+                    <form class="form-horizontal col-6" action="{{ route('shows.add') }}" method="post"   enctype="multipart/form-data">
                         @csrf
                         <div class="card-body">
                             <div class="form-group row">
@@ -41,6 +41,26 @@
                                     <input type="text" class="form-control" id="title" name="title" placeholder="Title">
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label for="card_image" class="col-sm-3 text-right control-label col-form-label">
+                                    Category :</label>
+                                <div class="col-sm-9">
+                                    @php
+                                        $data = DB::table('catgories')->get();
+                                    @endphp
+                                    <select name="category_id" id="category_id">
+                                        <option value="0"></option>
+                                        @foreach ($data as $value)
+                                            <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
                             <div class="form-group row">
                                 <label for="fname" class="col-sm-3 text-right control-label col-form-label">
                                     Icon :</label>

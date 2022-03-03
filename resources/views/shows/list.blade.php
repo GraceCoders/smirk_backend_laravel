@@ -31,20 +31,33 @@
                                     <tr>
                                         <th>Title</th>
                                         <th>Icon</th>
+                                        <th>Category Name</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                {{-- <tbody></tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Icon</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </tfoot> --}}
+                                <tbody>
+                                    @foreach ($show as $value)
+                                        <tr>
+                                            <td>{{ $value->title }}</td>
+                                            <td><img src="{{ asset('storage/' . $value->show_icon) }}"
+                                                    style="height: 100px; width:100px"></td>
+                                            <td>{{ $value->name }}</td>
+                                            @if ($value->status == 1)
+                                                <td><button type="button" class="btn btn-primary">Active</button>
+                                                </td>
+                                            @else
+                                                <td><button type="button" class="btn btn-secondary">Inactive</button>
+                                                </td>
+                                            @endif
+                                            <td><a href="{{ route('shows.delete', $value->id) }}" method="POST">
+                                                <i class="fa fa-trash mr-2" aria-hidden="true"></i>
+                                            </a></td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
                             </table>
+                            {{$show->links('pagination::bootstrap-4')}}
                         </div>
                     </div>
                 </div>

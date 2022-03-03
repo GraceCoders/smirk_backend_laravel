@@ -43,22 +43,39 @@
                                         placeholder="Card Image">
                                 </div>
                             </div>
-                            <div class="card-body">
-                                <div class="form-group row">
-                                    <label for="card_image" class="col-sm-3 text-right control-label col-form-label">
-                                        Show :</label>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label for="card_image" class="col-sm-3 text-right control-label col-form-label">
+                                    Show :</label>
                                 <div class="col-sm-9">
-
                                     @php
-                                    $data = DB::table('shows')->get();
+                                        $data = DB::table('shows')->get();
                                     @endphp
                                     <select name="show_id" id="show_id">
-                                        @foreach ($data  as $value)
-                                        <option value="{{$value->id}}">{{$value->title}}</option>
+                                        @foreach ($data as $value)
+                                            <option value="{{ $value->id }}">{{ $value->title }}</option>
                                         @endforeach
-                                      </select>
+                                    </select>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label for="card_image" class="col-sm-3 text-right control-label col-form-label">
+                                    Category :</label>
+                                <div class="col-sm-9">
+                                    @php
+                                        $data = DB::table('catgories')->get();
+                                    @endphp
+                                    <select name="category_id" id="category_id">
+                                        <option value="0"></option>
+                                        @foreach ($data as $value)
+                                            <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
+                            </div>
                         </div>
                         <div class="border-top">
                             <div class="card-body">

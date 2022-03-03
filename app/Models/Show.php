@@ -13,6 +13,7 @@ class Show extends Model
         'title',
         'show_icon',
         'status',
+        'category_id'
     ];
 
     public function show()

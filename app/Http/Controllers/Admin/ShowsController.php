@@ -25,14 +25,8 @@ class ShowsController extends Controller
     public function showsList(Request $request, Show $show)
     {
         try {
-            $formData = $request->all();
-            $limit = $formData['length'];
-            $offset = $formData['start'];
-            $ethnicitiesList['draw'] = $formData['draw'];
-            $userDetails['recordsTotal'] = $show->count();
-            $userDetails['data'] = $show->offset($offset)->limit($limit)->get();
-            $userDetails['recordsFiltered'] = $show->count();
-            return json_encode($userDetails);
+            $show  = Show::join('catgories','shows.category_id','=','catgories.id')->paginate(10);
+            return view('shows.list',compact('show'));
         } catch (Exception $exception) {
             return view('exceptions', compact('exception'));
         }
@@ -50,9 +44,9 @@ class ShowsController extends Controller
         try {
             $formData = $request->all();
             unset($formData['_token']);
-            if ($request->file('show_icon')) {
-                $path = Storage::disk('public')->put(config('filesdirectory.show'), $request->file('show_icon'));
-                $formData['show_icon'] = url('storage/' . $path);
+            if ($request->show_icon) {
+                $file = upload_file($request->show_icon, 'card_image');
+                $formData['show_icon'] = $file;
             }
             $adminDetail = $show->create($formData);
             if ($adminDetail) {
@@ -72,12 +66,11 @@ class ShowsController extends Controller
      * @param  Show $show
      * @return void
      */
-    public function deleteShow(Request $request, Show $show)
+    public function deleteShow($id)
     {
-        if ($show->where('id', $request->id)->delete()) {
-            return 'success';
-        } else {
-            return 'error';
-        };
+        $user = Show::where('id',$id)->update(['status'=>0]); 
+        return redirect('/shows/list')->with('success', 'Category Deleted Successfully');;
+
     }
+
 }

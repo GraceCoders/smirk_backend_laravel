@@ -150,49 +150,7 @@
         ],
     });
 
-    var showTable = jQuery('#show-table').DataTable({
-        "pagingType": "numbers",
-        "responsive": true,
-        "processing": true,
-        "serverSide": true,
-        "orderable": false,
-        "ajax": {
-            "url": "{{ route('shows.list') }}",
-            "dataType": "json",
-            "type": "POST",
-            "data": function(data) {
-                var searchData = $('input[type=search]').value;
-                var statusData = $('input[type=radio]:checked').val();
-                data.searchText = searchData;
-                data.statusData = statusData;
-                data._token = '{{ csrf_token() }}';
-            }
-        },
-        columns: [{
-                "data": "title"
-            },
-            {
-                "data": "show_icon"
-            },
-            {
-                data: "status",
-                "render": function(data, type, row) {
-                    if (row.status == '1') {
-                        return 'Active';
-                    } else {
-                        return 'Deactive';
-                    }
-                }
-            },
-            {
-                data: "id",
-                "render": function(data, type, full, meta) {
-                    return '<button type="submit" onClick="activateOrDeactivate(2,' + data +
-                        ',2)"><i class="fa fa-trash mr-2 " aria-hidden="true "></i></button>';
-                }
-            }
-        ],
-    });
+
     // var cardTable = jQuery('#card-table').DataTable({
     //     "pagingType": "numbers",
     //     "responsive": true,
@@ -242,12 +200,7 @@
             case 1:
                 flag = "{{ route('preferences.delete') }}";
                 break;
-            case 2:
-                flag = "{{ route('shows.delete') }}";
-                break;
-            case 3:
-                flag = "{{ route('cards.delete') }}";
-                break;
+           
         }
         return flag;
     }

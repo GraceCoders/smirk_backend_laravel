@@ -60,15 +60,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::post('delete', [PreferencesController::class, 'deletePreference'])->name('delete');
     });
     Route::name('shows.')->prefix('shows')->group(function () {
-        Route::get('list', function () {
-            return view('shows/list');
-        })->name('list');
         Route::get('add', function () {
             return view('shows/add');
         })->name('add');
-        Route::post('list', [ShowsController::class, 'showsList'])->name('list');
+        Route::get('list', [ShowsController::class, 'showsList'])->name('list');
         Route::post('add', [ShowsController::class, 'addShow'])->name('add');
-        Route::post('delete', [ShowsController::class, 'deleteShow'])->name('delete');
+        Route::get('delete/{id}', [ShowsController::class, 'deleteShow'])->name('delete');
     });
     Route::name('cards.')->prefix('cards')->group(function () {
 
@@ -77,11 +74,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
         })->name('add');
         Route::get('list', [CardsController::class, 'cardsList'])->name('list');
         Route::post('add', [CardsController::class, 'addCard'])->name('add');
-        Route::post('delete', [CardsController::class, 'deleteCard'])->name('delete');
+        Route::get('delete/{id}', [CardsController::class, 'deleteCard'])->name('delete');
     });
 
     Route::name('category.')->prefix('catgory')->group(function () {
         Route::resource('list',CategoryController::class);
+        Route::get('inactive/{id}',[CategoryController::class,'inactive'])->name('inactive');
 
     });
 

@@ -19,7 +19,7 @@ class CategoryController extends Controller
     public function index()
     {
         try {
-            $card  = Category::paginate(20);
+            $card  = Category::where('status',1)->paginate(20);
             return view('category.list', compact('card'));
         } catch (Exception $exception) {
             return view('exceptions', compact('exception'));
@@ -90,10 +90,9 @@ class CategoryController extends Controller
      * @param  \App\Models\Catgory  $catgory
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function inactive($id)
     {
-        $user = Category::findOrFail($id);
-        $user->delete();
+        $user = Category::where('id',$id)->update(['status'=>0]); 
         return redirect('/catgory/list')->with('success', 'Category Deleted Successfully');;
     }
 }

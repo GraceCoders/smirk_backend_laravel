@@ -27,7 +27,12 @@ class CardsController extends Controller
     public function cardsList(Request $request)
     {
         try {
-          $card  = Card::join('shows','cards.show_id','=','shows.id')->paginate(20);
+          $card  = Card::join('shows','cards.show_id','=','shows.id')
+          ->join('catgories','cards.category_id','=','catgories.id')
+          ->where('cards.status',1)
+          ->orderBy('cards.id','desc')
+          ->select('cards.*','shows.title','catgories.name')
+          ->paginate(10);
             return view('cards.list',compact('card'));
         } catch (Exception $exception) {
             return view('exceptions', compact('exception'));
@@ -41,13 +46,11 @@ class CardsController extends Controller
      * @param  Card $card
      * @return void
      */
-    public function deleteCard(Request $request, Card $card)
+    public function deleteCard($id)
     {
-        if ($card->where('id', $request->id)->delete()) {
-            return 'success';
-        } else {
-            return 'error';
-        };
+        $user = Card::where('id',$id)->update(['status'=>0]); 
+        return redirect('/cards/list')->with('success', 'Category Deleted Successfully');;
+
     }
 
     /**
@@ -62,9 +65,10 @@ class CardsController extends Controller
         try {
             $formData = $request->all();
             unset($formData['_token']);
-            if ($request->hasFile('card_image')) {
-                $storagePath = Storage::disk('public')->put('card_images', $request->file('card_image'));
-                $formData['card_image'] = url('storage/' . $storagePath);
+
+            if ($request->card_image) {
+                $file = upload_file($request->card_image, 'card_image');
+                $formData['card_image'] = $file;
             }
             $adminDetail = $card->create($formData);
             if ($adminDetail) {

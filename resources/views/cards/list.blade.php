@@ -31,26 +31,31 @@
                                     <tr>
                                         <th>Card</th>
                                         <th>Show Name</th>
+                                        <th>Category Name</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($card as $value)
                                     <tr>
-                                        <td><img src="{{$value->card_image}}" style="height: 100px; width:100px"></td>
+                                        <td><img src="{{ asset('storage/' . $value->card_image) }}" style="height: 100px; width:100px"></td>
                                         <td>{{$value->title}}</td>
-                                        <td>Action</td>
+                                        <td>{{$value->name}}</td>
+                                        <td><a href="{{ route('cards.delete', $value->id) }}">
+                                            <i class="fa fa-trash mr-2" aria-hidden="true"></i>
+                                        </a></td>
                                     </tr>
                                     @endforeach
 
                                 </tbody>
 
                             </table>
+                            {{$card->links('pagination::bootstrap-4')}}
                         </div>
                     </div>
                 </div>
             </div>
-            {{$card->links()}}
+           
         </div>
     </div>
 @stop
