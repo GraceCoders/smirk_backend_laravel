@@ -92,6 +92,8 @@ class CategoryController extends Controller
      */
     public function inactive($id)
     {
+            //heelo
+
         $user = Category::where('id',$id)->update(['status'=>0]); 
         return redirect('/catgory/list')->with('success', 'Category Deleted Successfully');;
     }
