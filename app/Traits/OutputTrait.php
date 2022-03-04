@@ -6,7 +6,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Exception;
 use Illuminate\Contracts\Validation\Validator as ValidationErrors;
-
+use Illuminate\Support\Facades\Storage;
 
 trait OutputTrait
 {
@@ -99,4 +99,8 @@ trait OutputTrait
         }
         return $msgs;
     }
+    public function upload_file($file, $folder)
+    {
+    return  Storage::disk('public')->put($folder, $file);
+  }
 }

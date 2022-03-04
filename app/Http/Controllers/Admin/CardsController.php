@@ -14,9 +14,12 @@ use Illuminate\Support\Str;
  * */
 
 use App\Models\Card;
+use App\Traits\OutputTrait;
 
 class CardsController extends Controller
 {
+    use OutputTrait;
+
     /**
      * cardsList
      *
@@ -67,7 +70,7 @@ class CardsController extends Controller
             unset($formData['_token']);
 
             if ($request->card_image) {
-                $file = upload_file($request->card_image, 'card_image');
+                $file =  $this->upload_file($request->card_image, 'card_image');
                 $formData['card_image'] = $file;
             }
             $adminDetail = $card->create($formData);

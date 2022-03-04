@@ -12,9 +12,11 @@ use Exception;
  * */
 
 use App\Models\Show;
+use App\Traits\OutputTrait;
 
 class ShowsController extends Controller
 {
+    use OutputTrait;
     /**
      * showsList
      *
@@ -45,7 +47,7 @@ class ShowsController extends Controller
             $formData = $request->all();
             unset($formData['_token']);
             if ($request->show_icon) {
-                $file = upload_file($request->show_icon, 'card_image');
+                $file =  $this->upload_file($request->show_icon, 'card_image');
                 $formData['show_icon'] = $file;
             }
             $adminDetail = $show->create($formData);
