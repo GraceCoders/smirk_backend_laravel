@@ -37,16 +37,17 @@ class CardsController extends Controller
         try {
             $id = Auth::id();
             $showid =   json_decode($request->show_id);
-            $show =  Card::where('show_id', $showid)->count();
+            $show =  Card::whereIn('show_id', $showid)->count();
+            $categoery =  Card::whereIn('show_id', $showid)->pluck('category_id');
+
             $count = (50 / 100) * $show;
             $int = round($count);
             $int = (int)$int;
             $data = CardAction::whereIn('show_id', $showid)->get();
             if (count($data) != 0) {
                 $uid = CardAction::where('user_id', $id)->where('card_action',1)->pluck('card_id');
-                $in = Card::whereIn('show_id', $showid)->whereNotIn('id',$uid)->limit($int)->get()->toarray();
-                $max = CardAction::where('user_id', $id)->where('card_action',1)->select('show_id', DB::raw('count(*) as total'))
-                    ->groupBy('show_id')->orderBy('total', 'desc')->first();
+                $in = Card::whereIn('show_id', $showid)->whereIn('category_id', $categoery)->whereNotIn('id',$uid)->limit($int)->get()->toarray();
+                $max = CardAction::where('user_id', $id)->where('card_action',1)->select('show_id', DB::raw('count(*) as total'))->groupBy('show_id')->orderBy('total', 'desc')->first();
                 if ($max) {
                     $next = (50 / 100) * $int;
                     $int2 = round($next);
@@ -57,10 +58,11 @@ class CardsController extends Controller
                     $paginate = new Paginator($output,count($output), 10);
                     return response()->json(['statuscode' => 200, 'message' => 'ListedSuccessfully', 'data' => $paginate], 200);
                 } else {
-                    $all = Card::whereNotIn('show_id', $showid)->limit($int)->paginate(10)->toarray();
+                    $all = Card::whereNotIn('show_id', $showid)->whereIn('category_id', $categoery)->limit($int)->paginate(10)->toarray();
                     $output = array_merge($in, $all);
                     $paginate = new Paginator($output,count($output), 10);
-                    return response()->json(['statuscode' => 200, 'message' => 'ListedSuccessfully', 'data' => $paginate], 200);                }
+                    return response()->json(['statuscode' => 200, 'message' => 'ListedSuccessfully', 'data' => $paginate], 200);
+                }
             } else {
                 $output = Card::whereIn('show_id', $showid)->paginate(10)->toarray();
                 $this->sendSuccessResponse(trans("Messages.ListedSuccessfully"), $output);
