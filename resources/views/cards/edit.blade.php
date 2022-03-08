@@ -31,7 +31,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <form class="form-horizontal col-6" action="{{ route('cards.add') }}" method="post"
+                    <form class="form-horizontal col-6" action="{{ route('cards.update',$data->id) }}" method="post"
                         enctype="multipart/form-data">
                         @csrf
                         <div class="card-body">
@@ -50,12 +50,16 @@
                                     Show :</label>
                                 <div class="col-sm-9">
                                     @php
-                                        $data = DB::table('shows')->get();
+                                        $show = DB::table('shows')->get();
                                     @endphp
                                     <select name="show_id" id="show_id">
-                                        @foreach ($data as $value)
-                                            <option value="{{ $value->id }}">{{ $value->title }}</option>
-                                        @endforeach
+                                        @foreach ($show as $value)
+                                        @if ($value->id == $data->show_id)
+                                    <option value="{{ $value->id }}" selected>{{ $value->title }}</option>
+                                    @else
+                                    <option value="{{ $value->id }}">{{ $value->title }}</option>
+                                    @endif
+                                            @endforeach
                                     </select>
                                 </div>
                             </div>

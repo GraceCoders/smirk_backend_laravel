@@ -52,6 +52,9 @@
                                             @endif
                                             <td><a href="{{ route('shows.delete', $value->id) }}" method="POST">
                                                 <i class="fa fa-trash mr-2" aria-hidden="true"></i>
+
+                                                <a href="{{ route('shows.edit', $value->id) }}">
+                                                <i class="fa fa-edit mr-2" aria-hidden="true"></i>
                                             </a></td>
                                         </tr>
                                     @endforeach

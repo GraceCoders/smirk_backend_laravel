@@ -39,7 +39,6 @@ class CardsController extends Controller
             $showid =   json_decode($request->show_id);
             $show =  Card::whereIn('show_id', $showid)->count();
             $categoery =  Card::whereIn('show_id', $showid)->pluck('category_id');
-
             $count = (50 / 100) * $show;
             $int = round($count);
             $int = (int)$int;

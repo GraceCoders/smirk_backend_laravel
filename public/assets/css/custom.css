@@ -79,3 +79,7 @@ select#category_id {
     word-wrap: normal;
     text-transform: capitalize;
 }
+
+i.fa.fa-edit.mr-2 {
+    color: black;
+}

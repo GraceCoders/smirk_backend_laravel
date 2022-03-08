@@ -66,6 +66,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('list', [ShowsController::class, 'showsList'])->name('list');
         Route::post('add', [ShowsController::class, 'addShow'])->name('add');
         Route::get('delete/{id}', [ShowsController::class, 'deleteShow'])->name('delete');
+        Route::get('edit/{id}', [ShowsController::class, 'editShow'])->name('edit');
+        Route::post('update/{id}', [ShowsController::class, 'updateShow'])->name('update');
     });
     Route::name('cards.')->prefix('cards')->group(function () {
 
@@ -75,6 +77,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('list', [CardsController::class, 'cardsList'])->name('list');
         Route::post('add', [CardsController::class, 'addCard'])->name('add');
         Route::get('delete/{id}', [CardsController::class, 'deleteCard'])->name('delete');
+        Route::get('edit/{id}', [CardsController::class, 'editCard'])->name('edit');
+        Route::post('update/{id}', [CardsController::class, 'updateCard'])->name('update');
+
     });
 
     Route::name('category.')->prefix('catgory')->group(function () {

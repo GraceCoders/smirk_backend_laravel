@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
  * */
 
 use App\Models\Card;
+use App\Models\Show;
 use App\Traits\OutputTrait;
 
 class CardsController extends Controller
@@ -66,6 +67,7 @@ class CardsController extends Controller
     public function addCard(Request $request, Card $card)
     {
         try {
+            $show  = Show::where('id',$request->show_id)->first();
             $formData = $request->all();
             unset($formData['_token']);
 
@@ -73,14 +75,36 @@ class CardsController extends Controller
                 $file =  $this->upload_file($request->card_image, 'card_image');
                 $formData['card_image'] = $file;
             }
+            $formData['category_id'] = $show->category_id;
             $adminDetail = $card->create($formData);
             if ($adminDetail) {
-                return redirect()->back()->with('success', 'Card added successfully');
+                return redirect('/cards/list')->with('success', 'Card added Successfully');;
             } else {
                 return redirect()->back()->with('error', 'Not added');
             }
         } catch (Exception $exception) {
             return view('exceptions', compact('exception'));
         }
+    }
+    public function editCard($id){
+        $data = Card::join('shows','cards.show_id','=','shows.id')
+        ->where('cards.id',$id)
+        ->select('cards.*','shows.id as show_id','shows.title as show_name')
+        ->first();
+        return view('cards.edit',compact('data'));
+    }
+    public function updateCard(Request $request,$id){
+      $data = Card::where('id',$id)->first();
+      $show  = Show::where('id',$request->show_id)->first();
+      if ($request->card_image) {
+        $file =  $this->upload_file($request->card_image, 'card_image');
+        $data->card_image =$file; 
+    }else{
+      $data->card_image =$data->card_image; 
+    }
+      $data->show_id = $request->show_id;
+      $data->category_id = $show->category_id;
+       $data->save();
+       return redirect('/cards/list')->with('success', 'Card Updated Successfully');;
     }
 }
