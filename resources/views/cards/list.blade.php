@@ -30,7 +30,7 @@
                                 <thead>
                                     <tr>
                                         <th>Card</th>
-                                        <th>Show Name</th>
+                                        <th>Name</th>
                                         <th>Created At</th>
                                         <th>Action</th>
                                     </tr>
@@ -39,7 +39,7 @@
                                     @foreach ($card as $value)
                                     <tr>
                                         <td><img src="{{ asset('storage/' . $value->card_image) }}" style="height: 100px; width:100px"></td>
-                                        <td>{{$value->title}}</td>
+                                        <td>{{$value->name}}</td>
                                         <td>{{$value->created_at}}</td>
                                         <td><a href="{{ route('cards.delete', $value->id) }}">
                                             <i class="fa fa-trash mr-2" aria-hidden="true"></i>

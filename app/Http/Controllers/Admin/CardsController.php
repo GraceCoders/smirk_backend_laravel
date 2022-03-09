@@ -31,11 +31,10 @@ class CardsController extends Controller
     public function cardsList(Request $request)
     {
         try {
-          $card  = Card::join('shows','cards.show_id','=','shows.id')
-          ->join('catgories','cards.category_id','=','catgories.id')
+          $card  = Card::join('catgories','cards.category_id','=','catgories.id')
           ->where('cards.status',1)
           ->orderBy('cards.id','desc')
-          ->select('cards.*','shows.title','catgories.name')
+          ->select('cards.*','catgories.name as cat_name')
           ->paginate(10);
             return view('cards.list',compact('card'));
         } catch (Exception $exception) {
@@ -67,17 +66,17 @@ class CardsController extends Controller
     public function addCard(Request $request, Card $card)
     {
         try {
-            $show  = Show::where('id',$request->show_id)->first();
-            $formData = $request->all();
-            unset($formData['_token']);
+
+            $card = new Card();
+            $card->name = $request->name;
+            $card->category_id = $request->category_id;
 
             if ($request->card_image) {
                 $file =  $this->upload_file($request->card_image, 'card_image');
-                $formData['card_image'] = $file;
+                $card->card_image =$file;
             }
-            $formData['category_id'] = $show->category_id;
-            $adminDetail = $card->create($formData);
-            if ($adminDetail) {
+            $card->save();
+            if ($card) {
                 return redirect('/cards/list')->with('success', 'Card added Successfully');;
             } else {
                 return redirect()->back()->with('error', 'Not added');
@@ -87,15 +86,15 @@ class CardsController extends Controller
         }
     }
     public function editCard($id){
-        $data = Card::join('shows','cards.show_id','=','shows.id')
+        $data = Card::join('catgories','cards.category_id','=','catgories.id')
+        ->where('cards.status',1)
         ->where('cards.id',$id)
-        ->select('cards.*','shows.id as show_id','shows.title as show_name')
+        ->select('cards.*','catgories.name as cat_name')
         ->first();
         return view('cards.edit',compact('data'));
     }
     public function updateCard(Request $request,$id){
       $data = Card::where('id',$id)->first();
-      $show  = Show::where('id',$request->show_id)->first();
       if ($request->card_image) {
         $file =  $this->upload_file($request->card_image, 'card_image');
         $data->card_image =$file; 
@@ -103,7 +102,6 @@ class CardsController extends Controller
       $data->card_image =$data->card_image; 
     }
       $data->show_id = $request->show_id;
-      $data->category_id = $show->category_id;
        $data->save();
        return redirect('/cards/list')->with('success', 'Card Updated Successfully');;
     }

@@ -47,24 +47,34 @@
                         <div class="card-body">
                             <div class="form-group row">
                                 <label for="card_image" class="col-sm-3 text-right control-label col-form-label">
-                                    Show :</label>
+                                    Name :</label>
+                                <div class="col-sm-9">
+                                <input type="text" class="form-control" id="name" name="name"
+                                        value="{{$data->name}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label for="card_image" class="col-sm-3 text-right control-label col-form-label">
+                                    Category :</label>
                                 <div class="col-sm-9">
                                     @php
-                                        $show = DB::table('shows')->get();
+                                        $catgories = DB::table('catgories')->get();
                                     @endphp
-                                    <select name="show_id" id="show_id">
-                                        @foreach ($show as $value)
-                                        @if ($value->id == $data->show_id)
-                                    <option value="{{ $value->id }}" selected>{{ $value->title }}</option>
-                                    @else
-                                    <option value="{{ $value->id }}">{{ $value->title }}</option>
-                                    @endif
-                                            @endforeach
+                                    <select name="category_id" id="category_id">
+                                        <option value="0"></option>
+                                        @foreach ($catgories as $value)
+                                        @if ($value->id == $data->category_id)
+                                        <option value="{{ $value->id }}" selected>{{ $value->name }}</option>
+                                          @else
+                                         <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                          @endif
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                         </div>
-                     
                         <div class="border-top">
                             <div class="card-body">
                                 <button type="submit" class="btn btn-primary">Submit</button>

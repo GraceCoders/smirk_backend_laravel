@@ -13,6 +13,7 @@ class Card extends Model
         'card_image',
         'status',
         'show_id',
+        'name',
         'category_id'
     ];
 }
