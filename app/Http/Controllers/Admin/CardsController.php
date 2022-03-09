@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
  * */
 
 use App\Models\Card;
+use App\Models\Category;
 use App\Models\Show;
 use App\Traits\OutputTrait;
 
@@ -94,6 +95,7 @@ class CardsController extends Controller
         return view('cards.edit',compact('data'));
     }
     public function updateCard(Request $request,$id){
+        $cat = Category::where('id',$request->category_id)->first();
       $data = Card::where('id',$id)->first();
       if ($request->card_image) {
         $file =  $this->upload_file($request->card_image, 'card_image');
@@ -101,8 +103,9 @@ class CardsController extends Controller
     }else{
       $data->card_image =$data->card_image; 
     }
-      $data->show_id = $request->show_id;
-       $data->save();
+      $data->name = $request->name;
+      $data->show_id = $cat->show_id;
+      $data->save();
        return redirect('/cards/list')->with('success', 'Card Updated Successfully');;
     }
 }
