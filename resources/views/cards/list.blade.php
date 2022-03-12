@@ -64,8 +64,9 @@
                                  
 
                                 </tbody>
-                                {{$card->links('pagination::bootstrap-4')}}
                             </table>
+                            {{$card->links('pagination::bootstrap-4')}}
+
                         </div>
                     </div>
                 </div>
