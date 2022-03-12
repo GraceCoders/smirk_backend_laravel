@@ -94,12 +94,12 @@
                     var td = "";
                     for (var i = 0; i < data.length; i++) {
                         if (window.location == "http://127.0.0.1:8000/cards/list") {
-                            var edit = "http://127.0.0.1:8000/edit/employee/" + data[i].id;
-                            var del = "http://127.0.0.1:8000/inactive/employee/" + data[i].id;
+                            var edit = "http://127.0.0.1:8000/cards/edit/" + data[i].id;
+                            var del = "http://127.0.0.1:8000/cards/delete/" + data[i].id;
                             var image =  "http://127.0.0.1:8000/storage/" + data[i].card_image;
                         } else {
-                            var edit = "https://smirkapp.us/public/edit/employee/" + data[i].id;
-                            var del = "https://smirkapp.us/public/inactive/employee/" + data[i].id;
+                            var edit = "https://smirkapp.us/cards/edit/" + data[i].id;
+                            var del = "https://smirkapp.us/public/cards/delete/" + data[i].id;
                             var image =  "https://smirkapp.us/storage/" + data[i].card_image;
 
                         }
