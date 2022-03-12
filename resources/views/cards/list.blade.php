@@ -41,7 +41,7 @@
                                     <tr>
                                         <th>Card</th>
                                         <th>Name</th>
-                                        <th>Created At</th>
+                                        <th>Category</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
