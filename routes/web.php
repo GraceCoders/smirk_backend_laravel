@@ -79,6 +79,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('delete/{id}', [CardsController::class, 'deleteCard'])->name('delete');
         Route::get('edit/{id}', [CardsController::class, 'editCard'])->name('edit');
         Route::post('update/{id}', [CardsController::class, 'updateCard'])->name('update');
+        Route::post('search', [CardsController::class, 'cardSearch'])->name('search');
 
     });
 
