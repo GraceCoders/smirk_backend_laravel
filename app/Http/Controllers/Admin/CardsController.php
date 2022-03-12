@@ -110,6 +110,7 @@ class CardsController extends Controller
     }
 
     public function cardSearch(Request $request){
+ if($request->search != null){
         $card  = Card::join('catgories','cards.category_id','=','catgories.id')
         ->where('cards.status',1)
         ->orderBy('cards.id','desc')
@@ -117,5 +118,13 @@ class CardsController extends Controller
         ->where('cards.name', 'like', '%' . $request->search . '%')
         ->get();
       return json_encode($card);
+ }else{
+    $card  = Card::join('catgories','cards.category_id','=','catgories.id')
+    ->where('cards.status',1)
+    ->orderBy('cards.id','desc')
+    ->select('cards.*','catgories.name as cat_name')
+    ->get();
+  return json_encode($card);
+ }
     }
 }
