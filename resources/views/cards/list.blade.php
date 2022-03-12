@@ -61,10 +61,10 @@
                                     </td>
                                     </tr>
                                     @endforeach
-                                    {{$card->links('pagination::bootstrap-4')}}
+                                 
 
                                 </tbody>
-
+                                {{$card->links('pagination::bootstrap-4')}}
                             </table>
                         </div>
                     </div>
