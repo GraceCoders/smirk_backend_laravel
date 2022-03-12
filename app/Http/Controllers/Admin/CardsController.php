@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use App\Models\Card;
 use App\Models\Category;
 use App\Models\Show;
+use DataTables;
 use App\Traits\OutputTrait;
 
 class CardsController extends Controller
@@ -32,16 +33,41 @@ class CardsController extends Controller
     public function cardsList(Request $request)
     {
         try {
-          $card  = Card::join('catgories','cards.category_id','=','catgories.id')
-          ->where('cards.status',1)
-          ->orderBy('cards.id','desc')
-          ->select('cards.*','catgories.name as cat_name')
-          ->paginate(10);
-            return view('cards.list',compact('card'));
+            if ($request->ajax()) {
+                $datas = Card::join('catgories','cards.category_id','=','catgories.id')
+                ->where('cards.status',1)
+                ->orderBy('cards.id','desc')
+                ->select('cards.*','catgories.name as cat_name')->get();
+                return Datatables::of($datas)
+              ->addColumn('image', function ($report) { 
+                        $url=asset("storage/".$report->card_image); 
+                        return '<img src='.$url.' border="0" width="120" class="img-rounded" align="center" />'; 
+                })
+            ->addColumn('action', function ($report) {
+                return '<a href="/cards/edit/'.$report->id.'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+                <a href="cards/delete/"'.$report->id .'" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Delete</a>   ';
+            })
+                   ->rawColumns(['image', 'action'])
+                 ->make(true);
+            }     
+            return view('cards.list');
         } catch (Exception $exception) {
             return view('exceptions', compact('exception'));
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
     /**
      * deletePreference

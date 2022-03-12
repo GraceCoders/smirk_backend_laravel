@@ -19,8 +19,13 @@
 <script src="{{ asset('dist/js/pages/calendar/cal-init.js') }}"></script>
 <script src="{{ asset('assets/extra-libs/multicheck/datatable-checkbox-init.js') }}"></script>
 <script src="{{ asset('assets/extra-libs/multicheck/jquery.multicheck.js') }}"></script>
-<script src="{{ asset('assets/extra-libs/DataTables/datatables.min.js') }}"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+
+
+
+
 <script>
     $('[data-toggle="tooltip"]').tooltip();
     $(".preloader").fadeOut();
