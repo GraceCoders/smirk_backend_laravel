@@ -24,7 +24,7 @@
                             <a href="{{ route('category.list.create') }}"><button
                                     class="btn btn-outline-success ml-3 float-right" aria-disabled="true">Add</button></a>
                         </div>
-                        <h5 class="card-title">Cards</h5>
+                        <h5 class="card-title">Category</h5>
 
                         <div class="table-responsive">
                         <input type="text" name="search" id="search" placeholder="Search Card" class="matchedit">
