@@ -97,4 +97,14 @@ class CategoryController extends Controller
         $user = Category::where('id',$id)->update(['status'=>0]); 
         return redirect('/catgory/list')->with('success', 'Category Deleted Successfully');;
     }
+    public function categorySearch(Request $request){
+        if($request->search != null){
+               $card  = Category::where('name', 'like', '%' . $request->search . '%')
+               ->get();
+             return json_encode($card);
+        }else{
+           $card  = Category::get();
+         return json_encode($card);
+        }
+           }
 }

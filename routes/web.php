@@ -86,6 +86,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::name('category.')->prefix('catgory')->group(function () {
         Route::resource('list',CategoryController::class);
         Route::get('inactive/{id}',[CategoryController::class,'inactive'])->name('inactive');
+        Route::post('search', [CategoryController::class, 'categorySearch'])->name('search');
 
     });
 
