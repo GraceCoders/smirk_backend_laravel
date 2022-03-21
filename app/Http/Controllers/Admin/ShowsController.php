@@ -97,4 +97,18 @@ class ShowsController extends Controller
          $data->save();
          return redirect('/shows/list')->with('success', 'Card Updated Successfully');;
       }
+      public function showSearch(Request $request){
+        if($request->search != null){
+               $card  = Show::join('catgories','shows.category_id','=','catgories.id')
+               ->select('shows.*','catgories.name')
+               ->where('shows.title', 'like', '%' . $request->search . '%')
+               ->get();
+             return json_encode($card);
+        }else{
+           $card = Show::join('catgories','shows.category_id','=','catgories.id')
+           ->select('shows.*','catgories.name')
+           ->get();
+         return json_encode($card);
+        }
+           }
 }

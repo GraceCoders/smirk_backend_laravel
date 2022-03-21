@@ -26,6 +26,8 @@
                         <h5 class="card-title">Shows</h5>
 
                         <div class="table-responsive">
+                        <input type="text" name="search" id="search" placeholder="Search Card" class="matchedit">
+
                             <table id="show-table" class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
@@ -36,7 +38,7 @@
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="data">
                                     @foreach ($show as $value)
                                         <tr>
                                             <td>{{ $value->title }}</td>
@@ -68,3 +70,41 @@
         </div>
     </div>
 @stop
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script>
+    $(document).ready(function(){
+        $('.matchedit').on('input', function postinput() {
+        var search = $(this).val(); 
+        $.ajax({ 
+            url: '{{route("shows.search")}}',
+            data: { search: search },
+              headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+             },
+            type: 'POST'
+        }).done(function(responseData) {   
+            // HoldOn.close();
+                    var data = JSON.parse(responseData);
+                    var td = "";
+                    for (var i = 0; i < data.length; i++) {
+                        if(data[i].status){
+                 var button= '<button type="button" class="btn btn-primary">Active</button>';
+                        }else{
+                 var button = '<button type="button" class="btn btn-secondary">Inactive</button>';
+                        }
+                        if (window.location == "http://127.0.0.1:8000/shows/list") {
+                            var edit = "http://127.0.0.1:8000/shows/edit/" + data[i].id;
+                            var del = "http://127.0.0.1:8000/shows/delete/" + data[i].id;
+                            var image =  "http://127.0.0.1:8000/storage/" + data[i].show_icon;
+                        } else {
+                            var edit = "https://smirkapp.us/shows/edit/" + data[i].id;
+                            var del = "https://smirkapp.us/public/shows/delete/" + data[i].id;
+                            var image =  "https://smirkapp.us/storage/" + data[i].show_icon;
+                        }
+                        td += '<tr><td>' + data[i].title + '</td><td><img src="'+image+'" style="height: 100px; width:100px"></td><td>' + data[i].name + '</td><td>'+button+'</td><td><a href="' + edit + '"><i class="fa fa-edit mr-2" aria-hidden="true"></i></a><a href="' + del + '"><i class="fa fa-trash mr-2" aria-hidden="true"></i></td></tr>';    
+                    }
+                    $('#data').html(td);
+        });
+    });
+}); 
+    </script>

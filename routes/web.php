@@ -68,6 +68,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('delete/{id}', [ShowsController::class, 'deleteShow'])->name('delete');
         Route::get('edit/{id}', [ShowsController::class, 'editShow'])->name('edit');
         Route::post('update/{id}', [ShowsController::class, 'updateShow'])->name('update');
+        Route::post('search', [ShowsController::class, 'showSearch'])->name('search');
+
     });
     Route::name('cards.')->prefix('cards')->group(function () {
 
