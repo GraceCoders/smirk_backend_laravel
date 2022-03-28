@@ -92,6 +92,7 @@ class CardsController extends Controller
         try {
             $this->validateRequest($request->all(), $this->validateCardAction());
             $show =  Card::where('id', $request->card_id)->first();
+            if($show){
             $arrData = $request->all();
             $arrData['user_id'] = Auth::user()->id;
             $arrData['card_id'] = $request->card_id;
@@ -104,6 +105,10 @@ class CardsController extends Controller
             } else {
                 $this->sendSuccessResponse(trans("Messages.cardActionSaved"));
             }
+        }else{
+            $this->sendSuccessResponse(trans("Messages.cardActionSaved"));
+
+        }
         } catch (Exception $exception) {
             $this->sendErrorOutput($exception);
         }
