@@ -91,7 +91,7 @@ class CardsController extends Controller
     {
         try {
             $this->validateRequest($request->all(), $this->validateCardAction());
-            $show =  Card::where('card_id', $request->card_id)->first();
+            $show =  Card::where('id', $request->card_id)->first();
             $arrData = $request->all();
             $arrData['user_id'] = Auth::user()->id;
             $arrData['card_id'] = $request->card_id;
