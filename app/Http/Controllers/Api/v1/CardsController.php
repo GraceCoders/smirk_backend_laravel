@@ -14,6 +14,7 @@ use Exception;
 use App\Models\Card;
 use App\Models\CardAction;
 use App\Models\Show;
+use App\Models\User;
 
 /**
  * Traits
@@ -117,22 +118,26 @@ class CardsController extends Controller
     public function getMatch(Request $request)
     {
         try {
+
             $userid = Auth::id();
             $data = CardAction::where('user_id', $userid)->pluck('card_id');
-            if ($data) {
+            if (count($data) != 0) {
                 $same = DB::table('card_actions')->where('user_id', '!=', $userid)->whereIn('card_id', $data)->where('card_action', 1)->select('user_id')->get();
-
                 if (empty($same)) {
-                    return response()->json(['statuscode' => 200, 'message' => 'You Not like and cards'], 200);
+                    return response()->json(['statuscode' => 200, 'message' => 'data not found'], 200);
                 }
                 $users =  $same->unique('user_id');
                 $result = array();
                 foreach ($users as $value) {
-                    $new = DB::table('card_actions')->where('user_id', $value->user_id)->where('card_action', 1)->pluck('card_id');
-                    $old = DB::table('card_actions')->where('user_id', $userid)->where('card_action', 1)->pluck('card_id');
+                   
+                    $new = DB::table('card_actions')->where('user_id', $value->user_id)->where('card_action', 1)->pluck('card_id')->toArray();
+                    $old = DB::table('card_actions')->where('user_id', $userid)->where('card_action', 1)->pluck('card_id')->toArray();
                     $count = DB::table('card_actions')->whereIn('card_id', $data)->where('card_action', 1)->where('user_id', $value->user_id)->get();
                     $final = count($count) /  count($old) * 100;
                     $result =  DB::table('users')->where('id', $value->user_id)->first();
+                    $cards = array_intersect($new,$old);
+                    $carddata = Card::whereIn('id',$cards)->get();
+                    $usersdetail = User::with('profileImage')->where('id',$value->id)->first();
                     $ab[] =  array(
                         "id" => $result->id,
                         "name" => $result->name,
@@ -154,12 +159,14 @@ class CardsController extends Controller
                         "user_type" => $result->user_type,
                         "age_preference_from" => $result->age_preference_from,
                         "age_preference_to" => $result->age_preference_to,
-                        'percentage' => $final
+                        'percentage' => $final,
+                        'cards'=>$carddata,
+                        'users'=>$usersdetail
                     );
                 }
                 return response()->json(['statuscode' => 200, 'message' => 'Get match list successfully ', 'data' => $ab], 200);
             }
-            return response()->json(['statuscode' => 400, 'message' => 'Somethinkg Went Wrong '], 400);
+            return response()->json(['statuscode' => 400, 'message' => 'Please like card'], 400);
         } catch (Exception $exception) {
             $this->sendErrorOutput($exception);
         }
