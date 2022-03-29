@@ -13,6 +13,7 @@ use Exception;
 
 use App\Models\Card;
 use App\Models\CardAction;
+use App\Models\ProfileImage;
 use App\Models\Show;
 use App\Models\User;
 
@@ -137,7 +138,7 @@ class CardsController extends Controller
                     $result =  DB::table('users')->where('id', $value->user_id)->first();
                     $cards = array_intersect($new,$old);
                     $carddata = Card::whereIn('id',$cards)->get();
-                    $usersdetail = User::with('profileImage')->where('id',$value->id)->first();
+                    $usersdetail = ProfileImage::where('user_id',$value->user_id)->get();
                     $ab[] =  array(
                         "id" => $result->id,
                         "name" => $result->name,
@@ -161,7 +162,7 @@ class CardsController extends Controller
                         "age_preference_to" => $result->age_preference_to,
                         'percentage' => $final,
                         'cards'=>$carddata,
-                        'users'=>$usersdetail
+                        'profileImage'=>$usersdetail
                     );
                 }
                 return response()->json(['statuscode' => 200, 'message' => 'Get match list successfully ', 'data' => $ab], 200);
@@ -182,3 +183,4 @@ class CardsController extends Controller
         return response()->json(['statuscode' => 200, 'message' => 'Get card list successfully ', 'data' => $final], 200);
     }
 }
+
