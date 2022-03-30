@@ -124,7 +124,7 @@ class CardsController extends Controller
             $userid = Auth::id();
             $data = CardAction::where('user_id', $userid)->pluck('card_id');
             if (count($data) != 0) {
-                $block = BlockUser::where('blocked_by',$userid)->pluck();
+                $block = BlockUser::where('blocked_by',$userid)->pluck('user_id');
                 $same = DB::table('card_actions')->where('user_id', '!=', $userid)->whereIn('card_id', $data)->whereNotIn('user_id',$block)->where('card_action', 1)->select('user_id')->get();
                 if (empty($same)) {
                     return response()->json(['statuscode' => 200, 'message' => 'data not found'], 200);
