@@ -49,9 +49,8 @@ class UserLikeController extends Controller
             $block->status = $request->status;
             $block->blocked_by = $id;
             $block->save();
-            if ($request->status == 1) {
+          
                 return response()->json(['statuscode' => 200, 'message' => 'user Block successfully', 'data' => $block], 200);
-            }
         }else{
             $user->user_id = $request->user_id;
             $user->status = $request->status;
