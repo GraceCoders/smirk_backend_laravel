@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\BlockUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Exception;
@@ -123,7 +124,8 @@ class CardsController extends Controller
             $userid = Auth::id();
             $data = CardAction::where('user_id', $userid)->pluck('card_id');
             if (count($data) != 0) {
-                $same = DB::table('card_actions')->where('user_id', '!=', $userid)->whereIn('card_id', $data)->where('card_action', 1)->select('user_id')->get();
+                $block = BlockUser::where('blocked_by',$userid)->pluck();
+                $same = DB::table('card_actions')->where('user_id', '!=', $userid)->whereIn('card_id', $data)->whereNotIn('user_id',$block)->where('card_action', 1)->select('user_id')->get();
                 if (empty($same)) {
                     return response()->json(['statuscode' => 200, 'message' => 'data not found'], 200);
                 }
@@ -162,7 +164,8 @@ class CardsController extends Controller
                         "age_preference_to" => $result->age_preference_to,
                         'percentage' => $final,
                         'cards'=>$carddata,
-                        'profileImage'=>$usersdetail
+                        'profileImage'=>$usersdetail,
+                        'user'=>Auth::user()
                     );
                 }
                 return response()->json(['statuscode' => 200, 'message' => 'Get match list successfully ', 'data' => $ab], 200);
