@@ -74,7 +74,7 @@ class UserLikeController extends Controller
 
     public function blockUserList(Request $request){
         $id = Auth::id();
-        $data = BlockUser::with('user')->where('blocked_by',$id)->paginate(20);
+        $data = BlockUser::with('user')->where('status',1)->where('blocked_by',$id)->paginate(20);
         return response()->json(['statuscode' => 200, 'message' => 'Get Block user list successfully', 'data' => $data], 200);
 
     }
