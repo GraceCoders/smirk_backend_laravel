@@ -297,6 +297,7 @@ class UsersController extends Controller
 
     public function Question(Request $request)
     {
+        try {
         $this->validateRequest($request->all(), $this->questionAction());
 
         $id = Auth::id();
@@ -310,6 +311,9 @@ class UsersController extends Controller
         } else {
             return response()->json(['statuscode' => 400, 'message' => 'something went wrong !'], 400);
         }
+    } catch (Exception $exception) {
+        $this->sendErrorOutput($exception);
+    }
     }
     public function questionAction()
     {
