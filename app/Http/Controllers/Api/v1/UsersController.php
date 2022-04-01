@@ -314,7 +314,7 @@ class UsersController extends Controller
     public function questionAction()
     {
         return [
-        'question' =>'required'
+            'question' => ['required', 'string'],
       ];
     }
     public function updateImages(Request $request)
