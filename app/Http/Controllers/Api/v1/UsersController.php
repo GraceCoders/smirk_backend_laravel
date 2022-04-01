@@ -310,14 +310,17 @@ class UsersController extends Controller
 
         }
     }
-    public function updateImages(Request $request, Image $Image)
+    public function updateImages(Request $request)
     {
         try {
-            $path = Storage::disk('public')->put(config('filesdirectory.profile'), $request->file('profile_photo'));
-            $filePath['profile_pic'] =  $path;
-            $filePath['user_id'] =  Auth::id();
-            $Image->insert($filePath);
-            $this->sendSuccessResponse(trans("Messages.UpdateSuccessful"));
+            $Image = New Image();
+            if ($request->profile_pic) {
+                $file =  $this->upload_file($request->profile_pic, 'profile_pic');
+                $Image->profile_pic ="https://smirkapp.us/storage/".$file;
+            }
+            $Image->user_id =  Auth::id();
+            $Image->save();
+            $this->sendSuccessResponse(trans("Messages.UpdateSuccessful"), $Image->toArray());
         } catch (Exception $exception) {
             $this->sendErrorOutput($exception);
         }
