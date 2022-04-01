@@ -22,11 +22,12 @@ use App\Traits\TwilioTrait;
 
 use App\Models\User;
 use App\Models\Device;
+use App\Models\Image;
 use App\Models\UserEthnicity;
 use App\Models\UserPreference;
 use App\Models\UserShow;
 use App\Models\ProfileImage;
-
+use App\Models\Question;
 use Illuminate\Auth\Events\Registered;
 
 class UsersController extends Controller
@@ -310,5 +311,19 @@ class UsersController extends Controller
         }
     }
 
+    public function Question(Request $request)
+    {
+        $id = Auth::id();
+        $data = new Question();
+        $data->user_id = $id;
+        $data->question = $request->question;
+        $data->status = 1;
+        $data->save();
+        if($data){
+            return response()->json(['statuscode' => 200, 'message' => 'Query Added Succssfully!', 'data' => $data], 200);
+        }else{
+            return response()->json(['statuscode' => 400, 'message' => 'something went wrong !'], 400);
 
+        }
+    }
 }

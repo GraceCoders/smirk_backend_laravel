@@ -88,16 +88,15 @@ class UserLikeController extends Controller
             $report->report = $request->report;
             $report->report_by = $id;
             $report->status = 1;
-
             $report->save();
-                return response()->json(['statuscode' => 200, 'message' => 'Report add successfully', 'data' => $report], 200);
+                return response()->json(['statuscode' => 200, 'message' => 'Report added successfully', 'data' => $report], 200);
         }else{
             $user->user_id = $request->user_id;
             $user->report = $request->report;
             $user->report_by = $id;
             $user->status = 1;
             $user->save();
-                return response()->json(['statuscode' => 200, 'message' => 'Report add successfully', 'data' => $user], 200);
+                return response()->json(['statuscode' => 200, 'message' => 'Report Updated successfully', 'data' => $user], 200);
            
         }
     }
