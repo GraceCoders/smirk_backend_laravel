@@ -295,22 +295,6 @@ class UsersController extends Controller
         }
     }
 
-    public function deleteImage(Request $request, User $user)
-    {
-        try {
-            $path = Storage::disk('public')->put(config('filesdirectory.profile'), $request->file('profile_photo'));
-            $filePath['profile_photo'] =  $path;
-            $user->where('id', Auth::user()->id)->update($filePath);
-
-            $image = Image::find($request->id);
-            unlink(config('filesdirectory.profile') . '/' . $image->image_name);
-            Image::where("id", $image->id)->delete();
-            $this->sendSuccessResponse(trans("Messages.DeleteSuccessful"));
-        } catch (Exception $exception) {
-            $this->sendErrorOutput($exception);
-        }
-    }
-
     public function Question(Request $request)
     {
         $id = Auth::id();
@@ -324,6 +308,18 @@ class UsersController extends Controller
         }else{
             return response()->json(['statuscode' => 400, 'message' => 'something went wrong !'], 400);
 
+        }
+    }
+    public function updateImages(Request $request, Image $Image)
+    {
+        try {
+            $path = Storage::disk('public')->put(config('filesdirectory.profile'), $request->file('profile_photo'));
+            $filePath['profile_pic'] =  $path;
+            $filePath['user_id'] =  Auth::id();
+            $Image->insert($filePath);
+            $this->sendSuccessResponse(trans("Messages.UpdateSuccessful"));
+        } catch (Exception $exception) {
+            $this->sendErrorOutput($exception);
         }
     }
 }

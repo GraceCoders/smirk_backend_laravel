@@ -44,6 +44,7 @@ Route::prefix('/v1')->group(function () {
         Route::get('/user-block-list', [UserLikeController::class, 'blockUserList'])->name('user-block-list');
         Route::post('/user-report', [UserLikeController::class, 'report'])->name('user-report');
 
+        Route::post('/update-images', [UsersController::class, 'updateImages'])->name('update-images');
 
     });
 
