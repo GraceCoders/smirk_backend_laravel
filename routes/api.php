@@ -45,6 +45,8 @@ Route::prefix('/v1')->group(function () {
         Route::post('/user-report', [UserLikeController::class, 'report'])->name('user-report');
 
         Route::post('/update-images', [UsersController::class, 'updateImages'])->name('update-images');
+        Route::get('/delete-images', [UsersController::class, 'deleteImage'])->name('delete-images');
+        Route::post('/add-question', [UsersController::class, 'Question'])->name('add-question');
 
     });
 

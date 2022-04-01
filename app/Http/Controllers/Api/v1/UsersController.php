@@ -297,32 +297,51 @@ class UsersController extends Controller
 
     public function Question(Request $request)
     {
+        $this->validateRequest($request->all(), $this->questionAction());
+
         $id = Auth::id();
         $data = new Question();
         $data->user_id = $id;
         $data->question = $request->question;
         $data->status = 1;
         $data->save();
-        if($data){
+        if ($data) {
             return response()->json(['statuscode' => 200, 'message' => 'Query Added Succssfully!', 'data' => $data], 200);
-        }else{
+        } else {
             return response()->json(['statuscode' => 400, 'message' => 'something went wrong !'], 400);
-
         }
+    }
+    public function questionAction()
+    {
+        return [
+        'question' => ['required']
+      ];
     }
     public function updateImages(Request $request)
     {
         try {
-            $Image = New Image();
+            if (empty($request->profile_pic)) {
+                return response()->json(['statuscode' => 400, 'message' => 'validation failed !', 'data' => 'The profile_pic field is required'], 400);
+            }
+            $Image = new Image();
             if ($request->profile_pic) {
                 $file =  $this->upload_file($request->profile_pic, 'profile_pic');
-                $Image->profile_pic ="https://smirkapp.us/storage/".$file;
+                $Image->profile_pic = "https://smirkapp.us/storage/" . $file;
             }
             $Image->user_id =  Auth::id();
             $Image->save();
             $this->sendSuccessResponse(trans("Messages.UpdateSuccessful"), $Image->toArray());
         } catch (Exception $exception) {
             $this->sendErrorOutput($exception);
+        }
+    }
+    public function deleteImage(Request $request)
+    {
+        $delete = Image::where('id', $request->id)->where('user_id', Auth::id())->delete();
+        if ($delete) {
+            return response()->json(['statuscode' => 200, 'message' => 'Image Deleted Successfully'], 200);
+        } else {
+            return response()->json(['statuscode' => 400, 'message' => 'Some thing went wrong'], 400);
         }
     }
 }

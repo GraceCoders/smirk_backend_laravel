@@ -71,6 +71,12 @@ class UserLikeController extends Controller
             'user_id' => ['required'],
         ];
     }
+    public function validatereport(){
+        return [
+            'report' => ['required'],
+            'user_id' => ['required'],
+        ];
+    }
 
     public function blockUserList(Request $request){
         $id = Auth::id();
@@ -80,6 +86,8 @@ class UserLikeController extends Controller
     }
     public function report(Request $request)
     {
+        $this->validateRequest($request->all(), $this->validatereport());
+
         $id =  Auth::id();
         $user =  ReportUser::where('user_id', $request->user_id)->where('report_by', $id)->first();
         if (empty($user)) {
