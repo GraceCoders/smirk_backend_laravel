@@ -27,6 +27,10 @@
                             <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                 href="{{ route('category.list.index') }}" aria-expanded="false"><i
                                     class="mdi mdi-bitbucket"></i><span class="hide-menu">Catgory</span></a></li>
+
+                                    <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                        href="{{ route('report.list.index') }}" aria-expanded="false"><i
+                                            class="mdi mdi-bitbucket"></i><span class="hide-menu">Report</span></a></li>
             </ul>
         </nav>
         <!-- End Sidebar navigation -->

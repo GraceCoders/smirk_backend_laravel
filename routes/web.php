@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\PreferencesController;
 use App\Http\Controllers\Admin\ShowsController;
 use App\Http\Controllers\Admin\CardsController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,5 +92,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::post('search', [CategoryController::class, 'categorySearch'])->name('search');
 
     });
-
+    Route::name('report.')->prefix('report')->group(function () {
+        Route::resource('list',ReportController::class);
+        Route::post('user/block',[ReportController::class,'blockuser'])->name('user.block');
+        Route::post('search', [CategoryController::class, 'categorySearch'])->name('search');
+    });
 });

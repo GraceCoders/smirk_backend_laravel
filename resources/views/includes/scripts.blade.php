@@ -72,6 +72,23 @@
             }, {
                 data: "about",
             },
+            {
+                data: "status",
+                "render": function(data, type, row) {
+                    if (row.status == '0') {
+                        return ' <button type="button" class="btn btn-info  switch block-modal" >UnBlocked</button>';
+                    } else {
+                        return '<button type="button" class="btn btn-danger  switch block-modal" >Blocked</button>';
+                    }
+                }
+            },
+            {
+                data: "id",
+                "render": function(data, type, full, meta) {
+                    return '<button type="submit" onClick="activateOrBlock(1,' + data +
+                        ',2)"><i class="fa fa-crop" aria-hidden="true"></i></button>';
+                }
+            }
         ],
     });
     var ethnicityTable = jQuery('#ethnicity-table').DataTable({
@@ -269,6 +286,51 @@
                             })
                         }
                         tableName.ajax.reload(true);
+                    }
+                });
+            }
+        })
+    }
+    function activateOrBlock(type, id, action) {
+        var actionUrl = checkRequestType(type);
+        var tableName = checkTableName(type);
+        Swal.fire({
+            title: 'Are you sure you want to Block This User?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    method: "post",
+                    url: "{{route('report.user.block')}}",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        id: id
+                    },
+                    success: function(data) {
+                        if (data == 'success') {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Blocked Successfully',
+                                showConfirmButton: false,
+                                timer: 3000
+                            })
+                        } else {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'Unblock',
+                                title: 'User Unblock successfully',
+                                showConfirmButton: false,
+                                timer: 3000
+                            })
+                        }
+                        usersTable.ajax.reload(true);
                     }
                 });
             }
