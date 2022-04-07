@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateChatUserTable extends Migration
+class AddColumnLikeUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,8 @@ class CreateChatUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('chat_user', function (Blueprint $table) {
-            $table->id();
-            $table->integer('sender_id');
-            $table->integer('receiver_id');
-            $table->integer('status');
-            $table->timestamps();
+        Schema::table('user_likes', function (Blueprint $table) {
+            $table->integer('likedBy');
         });
     }
 
@@ -29,6 +25,6 @@ class CreateChatUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('chat_user');
+        //
     }
 }

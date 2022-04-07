@@ -6,6 +6,7 @@ use App\Models\UserLike;
 use Exception;
 use App\Http\Controllers\Controller;
 use App\Models\BlockUser;
+use App\Models\ChatUser;
 use App\Models\ReportUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,16 +24,56 @@ class UserLikeController extends Controller
      */
     public function likeUser(Request $request)
     {
-        try {
-            $data = new UserLike();
-            $data->user_id = $request->user_id;
-            $data->like = $request->like;
-            $data->status = 1;
-            $data->save();
-            if ($request->like == 1) {
-                return response()->json(['statuscode' => 200, 'message' => 'user like successfully', 'data' => $data], 200);
-            } else {
-                return response()->json(['statuscode' => 200, 'message' => 'user dislike successfully', 'data' => $data], 200);
+        try { 
+            $id = Auth::id();
+            $user =  UserLike::where('user_id', $request->user_id)->where('likedBy', $id)->first();
+            if (empty($user)) {
+                $like = new UserLike();
+                $like->user_id = $request->user_id;
+                $like->like = $request->like;
+                $like->status = 1;
+                $like->likedBy = $id;
+                $like->save();
+                $sender =  UserLike::where('user_id',$id)->where('likedBy', $request->user_id)->where('like',1)->first();
+                $receiver =  UserLike::where('user_id',$request->user_id)->where('likedBy', $id)->where('like',1)->first();
+                
+                if(!empty($sender) && !empty($receiver)){
+                    if($sender->user_id ==  $receiver->likedBy){
+                        $data = new ChatUser();
+                        $data->sender_id = $request->user_id;
+                        $data->receiver_id = $id;
+                        $data->status = 1;
+                        $data->save(); 
+                    }
+                }       
+                if ($request->like == 1) {
+                    return response()->json(['statuscode' => 200, 'message' => 'user like successfully', 'data' => $like], 200);
+                }else{
+                    return response()->json(['statuscode' => 200, 'message' => 'user dislike successfully', 'data' => $like], 200);
+    
+                }
+            }else{
+                $user->user_id = $request->user_id;
+                $user->like = $request->like;
+                $user->likedBy = $id;
+                $user->save();
+                $sender =  UserLike::where('user_id',$id)->where('likedBy', $request->user_id)->where('like',1)->first();
+                $receiver =  UserLike::where('user_id',$request->user_id)->where('likedBy', $id)->where('like',1)->first();
+                if(!empty($sender) && !empty($receiver)){
+                if($sender->user_id ==  $receiver->likedBy){
+                    $data = new ChatUser();
+                    $data->sender_id = $request->user_id;
+                    $data->receiver_id = $id;
+                    $data->status = 1;
+                    $data->save(); 
+                }
+            }
+                if ($request->like == 1) {
+                    return response()->json(['statuscode' => 200, 'message' => 'user like successfully', 'data' => $user], 200);
+                }else{
+                    return response()->json(['statuscode' => 200, 'message' => 'user dislike successfully', 'data' => $user], 200);
+    
+                }
             }
         } catch (Exception $exception) {
             $this->sendErrorOutput($exception);

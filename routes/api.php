@@ -25,7 +25,7 @@ Route::prefix('/v1')->group(function () {
         Route::post('/login', [UsersController::class, 'login'])->name('login');
         Route::post('/verify', [UsersController::class, 'verifyOTP'])->name('verify');
         Route::get('/getShow', [ShowsController::class, 'getShow']);
-        Route::get('/retrieve-list', [UsersController::class, 'retrieveList'])->name('retrieve-list');
+        Route::get('/cards-list', [CardsController::class, 'cardsList'])->name('cards-list');
 
     });
     Route::middleware('auth:sanctum')->group(function () {
@@ -38,7 +38,6 @@ Route::prefix('/v1')->group(function () {
         Route::get('/get-match', [CardsController::class, 'getMatch'])->name('get-match');
         Route::post('/user-like', [UserLikeController::class, 'likeUser'])->name('user-like');
         Route::post('/get-match-card', [CardsController::class, 'getMatchcard'])->name('get-match-card');
-        Route::get('/cards-list', [CardsController::class, 'cardsList'])->name('cards-list');
 
         Route::post('/user-block', [UserLikeController::class, 'block'])->name('user-block');
         Route::get('/user-block-list', [UserLikeController::class, 'blockUserList'])->name('user-block-list');

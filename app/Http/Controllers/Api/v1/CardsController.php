@@ -94,7 +94,7 @@ class CardsController extends Controller
     {
         try {
             $this->validateRequest($request->all(), $this->validateCardAction());
-            $show =  Card::where('id', $request->card_id)->first();
+            $show =  Card::where('id', $request->card_id)->where('user_id',Auth::id())->first();
             if($show){
             $arrData = $request->all();
             $arrData['user_id'] = Auth::user()->id;
@@ -106,8 +106,7 @@ class CardsController extends Controller
                 $getData1 = $cardAction->makeCompatibility(Auth::user()->id, $cardAction);
                 $this->sendSuccessResponse(trans("Messages.cardActionSaved"), $getData1->toArray());
             } else {
-               return response()->json(['valid'=>true,'code' => 200, 'message' => 'cardActionSaved'], 200);
-
+                return response()->json(['valid'=>true,'code' => 200, 'message' => 'ListedSuccessfully'], 200);
             }
         }else{
             $this->sendSuccessResponse(trans("Messages.cardActionSaved"));

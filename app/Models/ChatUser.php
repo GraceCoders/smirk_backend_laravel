@@ -5,16 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserLike extends Model
+class ChatUser extends Model
 {
-
     use HasFactory;
-
+    protected $table = 'chat_user';
     protected $fillable = [
-        'userid',
-        'like',
-        'status',
-        'likedBy'
+        'sender_id',
+        'receiver_id',  
+         'status'   
     ];
 
 }
