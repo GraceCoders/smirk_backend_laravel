@@ -66,9 +66,9 @@ class CardsController extends Controller
                     return response()->json(['statuscode' => 200, 'message' => 'ListedSuccessfully', 'data' => $paginate], 200);
                 }
             } else {
-                $output = Card::whereIn('show_id', $showid)->paginate(10)->toarray();
-                $this->sendSuccessResponse(trans("Messages.ListedSuccessfully"), $output);
-            }
+                $output1 = Card::whereIn('show_id', $showid)->get();
+               return response()->json(['statuscode' => 200, 'message' => 'ListedSuccessfully', 'data' => $output1], 200);
+                }
         } catch (Exception $exception) {
             $this->sendErrorOutput($exception);
         }
@@ -103,10 +103,11 @@ class CardsController extends Controller
             $arrData['show_id'] = $show->id;
             $getData = $cardAction->create($arrData);
             if ($request->is_completed == config('fieldstatus.active')) {
-                // $getData = $cardAction->makeCompatibility(Auth::user()->id, $cardAction);
-                $this->sendSuccessResponse(trans("Messages.cardActionSaved"), $getData->toArray());
+                $getData1 = $cardAction->makeCompatibility(Auth::user()->id, $cardAction);
+                $this->sendSuccessResponse(trans("Messages.cardActionSaved"), $getData1->toArray());
             } else {
-                $this->sendSuccessResponse(trans("Messages.cardActionSaved"));
+               return response()->json(['valid'=>true,'code' => 200, 'message' => 'cardActionSaved'], 200);
+
             }
         }else{
             $this->sendSuccessResponse(trans("Messages.cardActionSaved"));
@@ -131,6 +132,7 @@ class CardsController extends Controller
                 }
                 $users =  $same->unique('user_id');
                 $result = array();
+                 if (count($users) != 0) {
                 foreach ($users as $value) {
                    
                     $new = DB::table('card_actions')->where('user_id', $value->user_id)->where('card_action', 1)->pluck('card_id')->toArray();
@@ -169,6 +171,9 @@ class CardsController extends Controller
                     );
                 }
                 return response()->json(['statuscode' => 200, 'message' => 'Get match list successfully ', 'data' => $ab], 200);
+                 }else{
+                    return response()->json(['statuscode' => 200, 'message' => 'no matches found'], 200); 
+                 }
             }
             return response()->json(['statuscode' => 400, 'message' => 'Please like card'], 400);
         } catch (Exception $exception) {

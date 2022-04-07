@@ -53,6 +53,19 @@ class UsersController extends Controller
      * @param  User $user
      * @return void
      */
+         public function retrieveList(Ethnicity $ethnicity, Laugh $laugh, Preference $preference, Matching $matching, Show $show)
+    {
+        try {
+            // $getData['ethnicities'] = $ethnicity->where('status', config('fieldstatus.active'))->get();
+            // $getData['preferences'] = $preference->where('status', config('fieldstatus.active'))->get();
+            // $getData['laughs'] = $laugh->where('status', config('fieldstatus.active'))->get();
+            // $getData['matchings'] = $matching->where('status', config('fieldstatus.active'))->get();
+            // $getData['shows'] = $show->where('status', config('fieldstatus.active'))->get();
+            $this->sendSuccessResponse(trans("Messages.ListedSuccessfully"), $getData);
+        } catch (Exception $exception) {
+            $this->sendErrorOutput($exception);
+        }
+    }
     public function login(Request $request, User $user)
     {
         try {
@@ -161,6 +174,8 @@ class UsersController extends Controller
         try {
             $this->validateRequest($request->all(), $this->validateSignUp());
             $arrData = $request->all();
+            $exist = User::where('mobile',$request->mobile)->first();
+            if(empty($exist)){
             $userId = $user->create(['mobile' => $request->mobile])->id;
             if (!empty($arrData['ethnicities'])) {
                 $this->loopThrough($userId, $userEthnicity, $arrData['ethnicities'], config('tablecolumnname.ethnicity'));
@@ -182,6 +197,10 @@ class UsersController extends Controller
             $user = $user->where('id', $userId)->first();
             $user = $this->loginUser($user);
             $this->sendSuccessResponse(trans("Messages.SignupSuccessful"), $user->toArray());
+            }else{
+          return response()->json(['statuscode' => 400, 'message' => 'mobile number already exist',], 400);
+
+            }
         } catch (Exception $exception) {
             $this->sendErrorOutput($exception);
         }
