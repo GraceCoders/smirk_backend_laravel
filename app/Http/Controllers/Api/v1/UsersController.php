@@ -22,12 +22,17 @@ use App\Traits\TwilioTrait;
 
 use App\Models\User;
 use App\Models\Device;
+use App\Models\Ethnicity;
 use App\Models\Image;
+use App\Models\Laugh;
+use App\Models\Matching;
+use App\Models\Preference;
 use App\Models\UserEthnicity;
 use App\Models\UserPreference;
 use App\Models\UserShow;
 use App\Models\ProfileImage;
 use App\Models\Question;
+use App\Models\Show;
 use Illuminate\Auth\Events\Registered;
 
 class UsersController extends Controller
@@ -56,11 +61,11 @@ class UsersController extends Controller
          public function retrieveList(Ethnicity $ethnicity, Laugh $laugh, Preference $preference, Matching $matching, Show $show)
     {
         try {
-            // $getData['ethnicities'] = $ethnicity->where('status', config('fieldstatus.active'))->get();
-            // $getData['preferences'] = $preference->where('status', config('fieldstatus.active'))->get();
-            // $getData['laughs'] = $laugh->where('status', config('fieldstatus.active'))->get();
-            // $getData['matchings'] = $matching->where('status', config('fieldstatus.active'))->get();
-            // $getData['shows'] = $show->where('status', config('fieldstatus.active'))->get();
+            $getData['ethnicities'] = $ethnicity->where('status', config('fieldstatus.active'))->get();
+            $getData['preferences'] = $preference->where('status', config('fieldstatus.active'))->get();
+            $getData['laughs'] = $laugh->where('status', config('fieldstatus.active'))->get();
+            $getData['matchings'] = $matching->where('status', config('fieldstatus.active'))->get();
+            $getData['shows'] = $show->where('status', config('fieldstatus.active'))->get();
             $this->sendSuccessResponse(trans("Messages.ListedSuccessfully"), $getData);
         } catch (Exception $exception) {
             $this->sendErrorOutput($exception);
