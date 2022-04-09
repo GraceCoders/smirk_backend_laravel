@@ -17,246 +17,33 @@ use Auth;
 
 trait PushNotificationTrait
 {
-    protected function sendNotification($deviceIds, $action, $metaData, $fieldsArray)
+    protected function userNotification($user){
+        
+    }
+
+
+
+    protected function push_notifications($token,$title,$message,$type)
     {
-        $serverKey = 'AAAATnsMUec:APA91bH56g3z-1eE5zFFhc0DbHv7FJahX8NT293B_2aTRbZyxdwAno41RcYQTjCpT0KOi27r19Wrwx8bNHkAlqoOEFMgScR6ATlhtU9aYBY575yQlBN0Yjsm4o8KFJWT5yXGiXyuNZbA';
-        $headers = [
-            'Authorization: key=' . $serverKey,
-            'Content-Type: application/json',
-        ];
-        $fields = [];
-        $fullName = auth()->user()->first_name . ' ' . auth()->user()->last_name;
-        $fields = $fieldsArray;
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $fields = array(
+            'to' => $token,
+            'notification' => array('title' => $title, 'body' => $message ),
+            'data' => array('title' => $title, 'body' => $message),
+        );
+        $headers = array(
+            'Authorization:key=' .'AAAAQj-Lo2o:APA91bGRoqgAGYebBrttnHFdvZqKDWsZYBCuXP7nMpAJn45xellNIF1LlkpZ_P0Nl1OgAi-z1h1qxsG5iWp3g6lSW8rqtnUlpfPPCZKDZ2B49qk6nrvv0QyVywJzmNipHhox1ZWIAAbf',
+            'Content-Type:application/json'
+        );
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_URL, $url); 
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields, true));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); 
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
         $result = curl_exec($ch);
-        if ($result === FALSE) {
-            die('Curl failed: ' . curl_error($ch));
-        }
         curl_close($ch);
         return $result;
-    }
-
-    protected function requestNotification($sender, $receiver, $action, $metaData, $message)
-    {
-        $deviceIds = $this->getNotificationToken($receiver);
-        $fullName = auth()->user()->first_name . ' ' . auth()->user()->last_name;
-        $message = $message;
-        $action = $action;
-        // $metaData = [
-        //     'info' => $info
-        // ];
-
-        if ($deviceIds) {
-            $fieldsArray = [];
-            $fieldsArray = array(
-                'registration_ids' => (array)$deviceIds,
-                'priority' => 'high',
-                'notification' => [
-                    'body' => $message,
-                    'title' => $fullName,
-                ],
-                'data' => [
-                    'body' => $message,
-                    'title' => $fullName,
-                    'notification_type' => $action,
-                    'data_payload' => $metaData
-                ],
-            );
-            $this->sendNotification($deviceIds, $action, $metaData, $fieldsArray);
-        }
-        $notification = [
-            'notification_to' => $receiver,
-            'notification_by' => $sender,
-            'action' => $action,
-            'message' => $message
-        ];
-        $this->insertNotification($notification);
-    }
-
-    public function insertNotification($notification)
-    {
-        Notification::create($notification);
-    }
-
-    public function getNotificationToken($user_id)
-    {
-        $devices = Device::where('user_id', $user_id)->get();
-        if ($devices) {
-            $tokens = [];
-            foreach ($devices as $device) {
-                $tokens = $device->notification_token;
-            }
-            return $tokens;
-        }
-        return [];
-    }
-
-    protected function bookingNotification($sender, $receiver, $action, $metaData, $message)
-    {
-        $deviceIds = $this->getNotificationToken($receiver);
-        $fullName = auth()->user()->first_name . ' ' . auth()->user()->last_name;
-        $message = $message;
-        $action = $action;
-        // $metaData = [
-        //     'info' => $info
-        // ];
-
-        if ($deviceIds) {
-            $fieldsArray = [];
-            $fieldsArray = array(
-                'registration_ids' => (array)$deviceIds,
-                'priority' => 'high',
-                'notification' => [
-                    'body' => $message,
-                    'title' => $fullName,
-                ],
-                'data' => [
-                    'body' => $message,
-                    'title' => $fullName,
-                    'notification_type' => $action,
-                    'data_payload' => $metaData
-                ],
-            );
-            $this->sendNotification($deviceIds, $action, $metaData, $message);
-        }
-    }
-
-    protected function ratingNotification($sender, $receiver, $action, $metaData, $message)
-    {
-        $deviceIds = $this->getNotificationToken($receiver);
-        $fullName = auth()->user()->first_name . ' ' . auth()->user()->last_name;
-        $message = $message;
-        $action = $action;
-        // $metaData = $info;
-
-        if ($deviceIds) {
-            $fieldsArray = [];
-            $fieldsArray = array(
-                'registration_ids' => (array)$deviceIds,
-                'priority' => 'high',
-                'notification' => [
-                    'body' => $message,
-                    'title' => $fullName,
-                ],
-                'data' => [
-                    'body' => $message,
-                    'title' => $fullName,
-                    'notification_type' => $action,
-                    'data_payload' => $metaData
-                ],
-            );
-            $this->sendNotification($deviceIds, $action, $metaData, $message);
-        }
-        $notification = [
-            'notification_to' => $receiver,
-            'notification_by' => auth()->user()->id,
-            'action' => $action,
-            'message' => $message
-        ];
-        $this->insertNotification($notification);
-    }
-
-    protected function messageNotification($sender, $receiver, $action, $metaData, $message)
-    {
-        $deviceIds = $this->getNotificationToken($receiver);
-        $fullName = auth()->user()->first_name . ' ' . auth()->user()->last_name;
-        $message = $message;
-        $action = $action;
-        // $metaData = $info;
-
-        if ($deviceIds) {
-            $fieldsArray = [];
-            $fieldsArray = array(
-                'registration_ids' => (array)$deviceIds,
-                'priority' => 'high',
-                'notification' => [
-                    'body' => $message,
-                    'title' => $fullName,
-                ],
-                'data' => [
-                    'body' => $message,
-                    'title' => $fullName,
-                    'notification_type' => $action,
-                    'data_payload' => $metaData
-                ],
-            );
-            $this->sendNotification($deviceIds, $action, $metaData, $message);
-        }
-    }
-
-    protected function callNotification($sender, $receiver, $action, $metaData, $message)
-    {
-        $deviceIds = $this->getNotificationToken($receiver);
-        $fullName = auth()->user()->first_name . ' ' . auth()->user()->last_name;
-        $message = $message;
-        $action = $action;
-        // $metaData = $info;
-
-        if ($deviceIds) {
-            $fieldsArray = [];
-            $fieldsArray = array(
-                'registration_ids' => (array)$deviceIds,
-                'priority' => 'high',
-                'notification' => [
-                    'body' => $message,
-                    'title' => $fullName,
-                ],
-                'data' => [
-                    'body' => $message,
-                    'title' => $fullName,
-                    'notification_type' => $action,
-                    'data_payload' => $metaData
-                ],
-            );
-            $this->sendNotification($deviceIds, $action, $metaData, $message);
-        }
-        $notification = [
-            'notification_to' => $receiver,
-            'notification_by' => auth()->user()->id,
-            'action' => $action,
-            'message' => $message
-        ];
-        $this->insertNotification($notification);
-    }
-
-    protected function connectionNotification($sender, $receiver, $action, $metaData, $message)
-    {
-        $deviceIds = $this->getNotificationToken($receiver);
-        $fullName = auth()->user()->first_name . ' ' . auth()->user()->last_name;
-        $message = $message;
-        $action = $action;
-        // $metaData = $info;
-
-        if ($deviceIds) {
-            $fieldsArray = [];
-            $fieldsArray = array(
-                'registration_ids' => (array)$deviceIds,
-                'priority' => 'high',
-                'notification' => [
-                    'body' => $message,
-                    'title' => $fullName,
-                ],
-                'data' => [
-                    'body' => $message,
-                    'title' => $fullName,
-                    'notification_type' => $action,
-                    'data_payload' => $metaData
-                ],
-            );
-            $this->sendNotification($deviceIds, $action, $metaData, $message);
-        }
-        $notification = [
-            'notification_to' => $receiver,
-            'notification_by' => auth()->user()->id,
-            'action' => $action,
-            'message' => $message
-        ];
-        $this->insertNotification($notification);
     }
 }

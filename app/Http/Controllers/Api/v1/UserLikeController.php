@@ -7,15 +7,18 @@ use Exception;
 use App\Http\Controllers\Controller;
 use App\Models\BlockUser;
 use App\Models\ChatUser;
+use App\Models\Notification;
 use App\Models\ReportUser;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\OutputTrait;
-
+use App\Traits\PushNotificationTrait;
+use Mockery\Matcher\Not;
 
 class UserLikeController extends Controller
 {
-    use OutputTrait;
+    use OutputTrait,PushNotificationTrait;
 
     /**
      * Display a listing of the resource.
@@ -25,23 +28,34 @@ class UserLikeController extends Controller
     public function likeUser(Request $request)
     {
         try { 
-            $id = Auth::id();
+            $id = Auth::user();
+            $title = "Smirk Notification";
+            $message = $id->full_name."Like your profile";
+            $type = 1;
             $user =  UserLike::where('user_id', $request->user_id)->where('likedBy', $id)->first();
             if (empty($user)) {
                 $like = new UserLike();
                 $like->user_id = $request->user_id;
                 $like->like = $request->like;
                 $like->status = 1;
-                $like->likedBy = $id;
+                $like->likedBy = $id->id;
                 $like->save();
-                $sender =  UserLike::where('user_id',$id)->where('likedBy', $request->user_id)->where('like',1)->first();
-                $receiver =  UserLike::where('user_id',$request->user_id)->where('likedBy', $id)->where('like',1)->first();
-                
+                $sender =  UserLike::where('user_id',$id->id)->where('likedBy', $request->user_id)->where('like',1)->first();
+                $receiver =  UserLike::where('user_id',$request->user_id)->where('likedBy', $id->id)->where('like',1)->first();
+                $userdata = User::where('id',$request->user_id)->first();
+                $this->push_notifications($userdata->device_token,$title,$message,$type);
+                $notification = new Notification();
+                $notification->message  =$message;
+                $notification->type = $type;
+                $notification->user_id= $request->user_id;
+                $notification->send_by = $id->id;
+                $notification->status = 1;
+                $notification->save();
                 if(!empty($sender) && !empty($receiver)){
                     if($sender->user_id ==  $receiver->likedBy){
                         $data = new ChatUser();
                         $data->sender_id = $request->user_id;
-                        $data->receiver_id = $id;
+                        $data->receiver_id = $id->id;
                         $data->status = 1;
                         $data->save(); 
                     }
@@ -55,17 +69,20 @@ class UserLikeController extends Controller
             }else{
                 $user->user_id = $request->user_id;
                 $user->like = $request->like;
-                $user->likedBy = $id;
+                $user->likedBy = $id->id;
                 $user->save();
-                $sender =  UserLike::where('user_id',$id)->where('likedBy', $request->user_id)->where('like',1)->first();
-                $receiver =  UserLike::where('user_id',$request->user_id)->where('likedBy', $id)->where('like',1)->first();
+                $sender =  UserLike::where('user_id',$id->id)->where('likedBy', $request->user_id)->where('like',1)->first();
+                $receiver =  UserLike::where('user_id',$request->user_id)->where('likedBy', $id->id)->where('like',1)->first();
+                $userdata = User::where('id',$request->user_id)->first();
+                $this->push_notifications($userdata->device_token,$title,$message,$type);
                 if(!empty($sender) && !empty($receiver)){
                 if($sender->user_id ==  $receiver->likedBy){
                     $data = new ChatUser();
                     $data->sender_id = $request->user_id;
-                    $data->receiver_id = $id;
+                    $data->receiver_id = $id->id;
                     $data->status = 1;
                     $data->save(); 
+
                 }
             }
                 if ($request->like == 1) {

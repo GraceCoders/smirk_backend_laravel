@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\v1\PreferencesController;
 use App\Http\Controllers\Api\v1\CardsController;
 use App\Http\Controllers\Api\v1\ShowsController;
 use App\Http\Controllers\Api\v1\UserLikeController;
+use App\Http\Controllers\Api\v1\ChatController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,6 +28,8 @@ Route::prefix('/v1')->group(function () {
         Route::post('/verify', [UsersController::class, 'verifyOTP'])->name('verify');
         Route::get('/getShow', [ShowsController::class, 'getShow']);
         Route::get('/cards-list', [CardsController::class, 'cardsList'])->name('cards-list');
+        Route::get('/retrieve-list', [UsersController::class, 'retrieveList'])->name('retrieve-list');
+
 
     });
     Route::middleware('auth:sanctum')->group(function () {
@@ -46,6 +50,12 @@ Route::prefix('/v1')->group(function () {
         Route::post('/update-images', [UsersController::class, 'updateImages'])->name('update-images');
         Route::get('/delete-images', [UsersController::class, 'deleteImage'])->name('delete-images');
         Route::post('/add-question', [UsersController::class, 'Question'])->name('add-question');
+
+        //chat room api 
+        Route::get('/chat-room', [ChatController::class, 'getRoom'])->name('chat-room');
+        // notification 
+        Route::get('/get-notification', [ChatController::class, 'getNotification'])->name('get-notification');
+
 
     });
 
