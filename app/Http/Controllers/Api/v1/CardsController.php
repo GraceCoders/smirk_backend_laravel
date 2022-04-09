@@ -95,13 +95,14 @@ class CardsController extends Controller
         try {
             $id = Auth::id();
             $this->validateRequest($request->all(), $this->validateCardAction());
-            $show =  CardAction::where('id', $request->card_id)->where('user_id',Auth::id())->first();
-            if($show){
+            $show =  CardAction::where('card_id', $request->card_id)->where('user_id',$id)->first();
+            $shows =  Card::where('id', $request->card_id)->first();
+            if(empty($show)){
             $arrData = $request->all();
             $arrData['user_id'] = $id;
             $arrData['card_id'] = $request->card_id;
             $arrData['card_action'] = $request->card_action;
-            $arrData['show_id'] = $show->id;
+            $arrData['show_id'] = $shows->id;
             $getData = $cardAction->create($arrData);
             if ($request->is_completed == config('fieldstatus.active')) {
                 $getData1 = $cardAction->makeCompatibility($id, $cardAction);
@@ -110,7 +111,7 @@ class CardsController extends Controller
                 $this->sendSuccessResponse(trans("Messages.cardActionSaved"), $getData->toArray());
             }
         }else{
-            $this->sendSuccessResponse(trans("Messages.cardActionSaved"));
+            $this->sendSuccessResponse(trans("Messages.This Card Already liked"));
 
         }
         } catch (Exception $exception) {
