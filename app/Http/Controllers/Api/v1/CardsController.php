@@ -47,9 +47,9 @@ class CardsController extends Controller
             $int = (int)$int;
             $data = CardAction::whereIn('show_id', $showid)->get();
             if (count($data) != 0) {
-                $uid = CardAction::where('user_id', $id)->where('card_action',1)->pluck('card_id');
+                $uid = CardAction::where('card_action',1)->pluck('card_id');
                 $in = Card::whereIn('show_id', $showid)->whereIn('category_id', $categoery)->whereNotIn('id',$uid)->limit($int)->get()->toarray();
-                $max = CardAction::where('user_id', $id)->where('card_action',1)->select('show_id', DB::raw('count(*) as total'))->groupBy('show_id')->orderBy('total', 'desc')->first();
+                $max = CardAction::where('card_action',1)->select('show_id', DB::raw('count(*) as total'))->groupBy('show_id')->orderBy('total', 'desc')->first();
                 if ($max) {
                     $next = (50 / 100) * $int;
                     $int2 = round($next);

@@ -39,19 +39,20 @@ trait RetrieveTrait
      * @param  Matching $matching
      * @return void
      */
-    public function retrieveList(Ethnicity $ethnicity, Laugh $laugh, Preference $preference, Matching $matching, Show $show)
-    {
-        try {
-            $getData['ethnicities'] = $ethnicity->where('status', config('fieldstatus.active'))->get();
-            $getData['preferences'] = $preference->where('status', config('fieldstatus.active'))->get();
-            $getData['laughs'] = $laugh->where('status', config('fieldstatus.active'))->get();
-            $getData['matchings'] = $matching->where('status', config('fieldstatus.active'))->get();
-            $getData['shows'] = $show->where('status', config('fieldstatus.active'))->get();
-            $this->sendSuccessResponse(trans("Messages.ListedSuccessfully"), $getData);
-        } catch (Exception $exception) {
-            $this->sendErrorOutput($exception);
-        }
-    }
+    // public function retrieveList(Ethnicity $ethnicity, Laugh $laugh, Preference $preference, Matching $matching, Show $show)
+    // {
+    //     dd('asdasdsad');
+    //     try {
+    //         $getData['ethnicities'] = $ethnicity->where('status', config('fieldstatus.active'))->get();
+    //         $getData['preferences'] = $preference->where('status', config('fieldstatus.active'))->get();
+    //         $getData['laughs'] = $laugh->where('status', config('fieldstatus.active'))->get();
+    //         $getData['matchings'] = $matching->where('status', config('fieldstatus.active'))->get();
+    //         $getData['shows'] = $show->where('status', config('fieldstatus.active'))->get();
+    //         $this->sendSuccessResponse(trans("Messages.ListedSuccessfully"), $getData);
+    //     } catch (Exception $exception) {
+    //         $this->sendErrorOutput($exception);
+    //     }
+    // }
 
     /**
      * uploadPhoto

@@ -27,10 +27,6 @@ Route::prefix('/v1')->group(function () {
         Route::post('/login', [UsersController::class, 'login'])->name('login');
         Route::post('/verify', [UsersController::class, 'verifyOTP'])->name('verify');
         Route::get('/getShow', [ShowsController::class, 'getShow']);
-        Route::get('/cards-list', [CardsController::class, 'cardsList'])->name('cards-list');
-        Route::get('/retrieve-list', [UsersController::class, 'retrieveList'])->name('retrieve-list');
-
-
     });
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/upload-photo', [UsersController::class, 'uploadPhoto'])->name('upload-photo');
@@ -58,5 +54,7 @@ Route::prefix('/v1')->group(function () {
 
 
     });
+    Route::get('/retrieve-list', [UsersController::class, 'retrieveList'])->name('retrieve-list');
+    Route::get('/cards-list', [CardsController::class, 'cardsList'])->name('cards-list');
 
 });
