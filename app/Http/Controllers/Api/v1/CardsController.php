@@ -93,20 +93,21 @@ class CardsController extends Controller
     public function actionOnCard(Request $request, CardAction $cardAction)
     {
         try {
+            $id = Auth::id();
             $this->validateRequest($request->all(), $this->validateCardAction());
-            $show =  Card::where('id', $request->card_id)->where('user_id',Auth::id())->first();
+            $show =  CardAction::where('id', $request->card_id)->where('user_id',Auth::id())->first();
             if($show){
             $arrData = $request->all();
-            $arrData['user_id'] = Auth::user()->id;
+            $arrData['user_id'] = $id;
             $arrData['card_id'] = $request->card_id;
             $arrData['card_action'] = $request->card_action;
             $arrData['show_id'] = $show->id;
             $getData = $cardAction->create($arrData);
             if ($request->is_completed == config('fieldstatus.active')) {
-                $getData1 = $cardAction->makeCompatibility(Auth::user()->id, $cardAction);
+                $getData1 = $cardAction->makeCompatibility($id, $cardAction);
                 $this->sendSuccessResponse(trans("Messages.cardActionSaved"), $getData1->toArray());
             } else {
-                return response()->json(['valid'=>true,'code' => 200, 'message' => 'ListedSuccessfully'], 200);
+                $this->sendSuccessResponse(trans("Messages.cardActionSaved"), $getData->toArray());
             }
         }else{
             $this->sendSuccessResponse(trans("Messages.cardActionSaved"));

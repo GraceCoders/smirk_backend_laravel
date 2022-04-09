@@ -14,6 +14,6 @@ class Card extends Model
         'status',
         'show_id',
         'name',
-        'category_id'
+        'category_id',
     ];
 }

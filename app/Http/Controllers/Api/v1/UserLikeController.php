@@ -30,7 +30,11 @@ class UserLikeController extends Controller
         try { 
             $id = Auth::user();
             $title = "Smirk Notification";
-            $message = $id->full_name."Like your profile";
+            if($request->like == 1){
+                $message = $id->full_name."Like your profile";
+            }else{
+                $message = $id->full_name."DisLike your profile";
+            }
             $type = 1;
             $user =  UserLike::where('user_id', $request->user_id)->where('likedBy', $id)->first();
             if (empty($user)) {
@@ -82,14 +86,12 @@ class UserLikeController extends Controller
                     $data->receiver_id = $id->id;
                     $data->status = 1;
                     $data->save(); 
-
                 }
             }
                 if ($request->like == 1) {
                     return response()->json(['statuscode' => 200, 'message' => 'user like successfully', 'data' => $user], 200);
                 }else{
                     return response()->json(['statuscode' => 200, 'message' => 'user dislike successfully', 'data' => $user], 200);
-    
                 }
             }
         } catch (Exception $exception) {
@@ -107,7 +109,6 @@ class UserLikeController extends Controller
             $block->status = $request->status;
             $block->blocked_by = $id;
             $block->save();
-          
                 return response()->json(['statuscode' => 200, 'message' => 'user Block successfully', 'data' => $block], 200);
         }else{
             $user->user_id = $request->user_id;
@@ -163,7 +164,6 @@ class UserLikeController extends Controller
             $user->status = 1;
             $user->save();
                 return response()->json(['statuscode' => 200, 'message' => 'Report Updated successfully', 'data' => $user], 200);
-           
         }
     }
 }

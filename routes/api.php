@@ -56,5 +56,4 @@ Route::prefix('/v1')->group(function () {
     });
     Route::get('/retrieve-list', [UsersController::class, 'retrieveList'])->name('retrieve-list');
     Route::get('/cards-list', [CardsController::class, 'cardsList'])->name('cards-list');
-
 });
