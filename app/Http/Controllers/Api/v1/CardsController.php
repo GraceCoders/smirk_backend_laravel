@@ -14,6 +14,7 @@ use Exception;
 
 use App\Models\Card;
 use App\Models\CardAction;
+use App\Models\GetMatch;
 use App\Models\ProfileImage;
 use App\Models\Show;
 use App\Models\User;
@@ -106,6 +107,14 @@ class CardsController extends Controller
             $getData = $cardAction->create($arrData);
             if ($request->is_completed == config('fieldstatus.active')) {
                 $getData1 = $cardAction->makeCompatibility($id, $cardAction);
+                $exsit = GetMatch::where('user_id',$id)->where('match_with',$getData1['user']->id)->first();
+                if(empty($exsit)){
+                    $data = new GetMatch();
+                    $data->user_id = $id;
+                     $data->match_with = $getData1['user']->id;
+                     $data->status = 1;
+                     $data->save();
+                }
                 $this->sendSuccessResponse(trans("Messages.cardActionSaved"), $getData1->toArray());
             } else {
                 $this->sendSuccessResponse(trans("Messages.cardActionSaved"), $getData->toArray());
