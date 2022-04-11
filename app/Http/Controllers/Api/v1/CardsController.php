@@ -177,7 +177,6 @@ class CardsController extends Controller
                  }else{
                     return response()->json(['statuscode' => 200, 'message' => 'no matches found'], 200); 
                  }
-            }
             return response()->json(['statuscode' => 400, 'message' => 'Please like card'], 400);
         } catch (Exception $exception) {
             $this->sendErrorOutput($exception);
