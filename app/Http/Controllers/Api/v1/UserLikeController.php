@@ -32,9 +32,9 @@ class UserLikeController extends Controller
             $id = Auth::user();
             $title = "Smirk Notification";
             if($request->like == 1){
-                $message = $id->full_name . "Like your profile";
+                $message = $id->full_name . " Like your profile";
             }else{
-                $message = $id->full_name."DisLike your profile";
+                $message = $id->full_name ." DisLike your profile";
             }
             $type = 1;
             $user =  UserLike::where('user_id', $request->user_id)->where('likedBy', $id)->first();
