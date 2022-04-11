@@ -128,7 +128,7 @@ class CardsController extends Controller
             $userid = Auth::id();
             $block = BlockUser::where('blocked_by',$userid)->where('status',1)->pluck('user_id');
 
-            $data = GetMatch::where('user_id', $userid)->whereNotIn('user_id',$block)->pluck('match_with');
+            $data = GetMatch::where('match_with', $userid)->whereNotIn('match_with',$block)->pluck('user_id');
             if (count($data) != 0) {
                 foreach ($data as $value) {
                 

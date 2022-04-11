@@ -7,6 +7,7 @@ use Exception;
 use App\Http\Controllers\Controller;
 use App\Models\BlockUser;
 use App\Models\ChatUser;
+use App\Models\GetMatch;
 use App\Models\Notification;
 use App\Models\ReportUser;
 use App\Models\User;
@@ -63,8 +64,16 @@ class UserLikeController extends Controller
                         $data->status = 1;
                         $data->save(); 
                     }
-                }       
+                }      
                 if ($request->like == 1) {
+                    $exsit = GetMatch::where('user_id',$id)->where('match_with',$request->user_id)->first();
+                    if(empty($exsit)){
+                        $data = new GetMatch();
+                         $data->user_id = $id;
+                         $data->match_with = $request->user_id;
+                         $data->status = 1;
+                         $data->save();
+                    } 
                     return response()->json(['statuscode' => 200, 'message' => 'user like successfully', 'data' => $like], 200);
                 }else{
                     return response()->json(['statuscode' => 200, 'message' => 'user dislike successfully', 'data' => $like], 200);
