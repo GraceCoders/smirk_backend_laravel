@@ -107,6 +107,7 @@ class CardsController extends Controller
             $getData = $cardAction->create($arrData);
             if ($request->is_completed == config('fieldstatus.active')) {
                 $getData1 = $cardAction->makeCompatibility($id, $cardAction);
+                dd($getData1);
                 $exsit = GetMatch::where('user_id',$id)->where('match_with',$getData1['user']->id)->first();
                 if(empty($exsit)){
                     $data = new GetMatch();
