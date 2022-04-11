@@ -137,9 +137,9 @@ class CardsController extends Controller
 
             $data = GetMatch::where('user_id', $userid)->whereNotIn('user_id',$block)->pluck('match_with');
             if (count($data) != 0) {
-                foreach ($users as $value) {
-                    // $new = DB::table('card_actions')->where('user_id', $value)->where('card_action', 1)->pluck('card_id')->toArray();
-                    // $old = DB::table('card_actions')->where('user_id', $userid)->where('card_action', 1)->pluck('card_id')->toArray();
+                foreach ($data as $value) {
+                    $new = DB::table('card_actions')->where('user_id', $value)->where('card_action', 1)->pluck('card_id')->toArray();
+                    $old = DB::table('card_actions')->where('user_id', $userid)->where('card_action', 1)->pluck('card_id')->toArray();
                     // $count = DB::table('card_actions')->whereIn('card_id', $data)->where('card_action', 1)->where('user_id', $value)->get();
                     // $final = count($count) /  count($old) * 100;
                     $result =  DB::table('users')->where('id', $value)->first();
