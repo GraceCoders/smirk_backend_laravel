@@ -117,7 +117,7 @@ class CardsController extends Controller
                 }
                 $this->sendSuccessResponse(trans("Messages.cardActionSaved"), $getData1->toArray());
             } else {
-                $this->sendSuccessResponse(trans("Messages.cardActionSaved"));
+                return response()->json(['code' => 200, 'message' => 'Card Like successfullly'], 200); 
             }
         }else{
             $this->sendSuccessResponse(trans("Messages.This Card Already liked"));
