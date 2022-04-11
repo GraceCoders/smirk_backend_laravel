@@ -58,13 +58,13 @@ class CardsController extends Controller
                     $not = Card::whereNotIn('show_id', $showid)->whereNotIn('id',$uid)->where('show_id', $max->show_id)->limit($int3)->get()->toarray();
                     $all = Card::whereNotIn('show_id', $showid)->whereNotIn('id',$uid)->where('show_id', '!=', $max->show_id)->limit($int3)->inRandomOrder()->get()->toarray();
                     $output = array_merge($in, $not, $all);
-                    $paginate = new Paginator($output,count($output), 10);
-                    return response()->json(['statuscode' => 200, 'message' => 'ListedSuccessfully', 'data' => $paginate], 200);
+                    // $paginate = new Paginator($output,count($output), 10);
+                    return response()->json(['statuscode' => 200, 'message' => 'ListedSuccessfully', 'data' => $output], 200);
                 } else {
                     $all = Card::whereNotIn('show_id', $showid)->whereIn('category_id', $categoery)->limit($int)->paginate(10)->toarray();
                     $output = array_merge($in, $all);
-                    $paginate = new Paginator($output,count($output), 10);
-                    return response()->json(['statuscode' => 200, 'message' => 'ListedSuccessfully', 'data' => $paginate], 200);
+                    // $paginate = new Paginator($output,count($output), 10);
+                    return response()->json(['statuscode' => 200, 'message' => 'ListedSuccessfully', 'data' =>$output], 200);
                 }
             } else {
                 $output1 = Card::whereIn('show_id', $showid)->get();
@@ -107,15 +107,8 @@ class CardsController extends Controller
             $getData = $cardAction->create($arrData);
             if ($request->is_completed == config('fieldstatus.active')) {
                 $getData1 = $cardAction->makeCompatibility($id, $cardAction);
-                $exsit = GetMatch::where('user_id',$id)->where('match_with',$getData1['user']->id)->first();
-                if(empty($exsit)){
-                    $data = new GetMatch();
-                    $data->user_id = $id;
-                     $data->match_with = $getData1['user']->id;
-                     $data->status = 1;
-                     $data->save();
-                }
-                $this->sendSuccessResponse(trans("Messages.cardActionSaved"), $getData->toArray());
+              
+                $this->sendSuccessResponse(trans("Messages.cardActionSaved"), $getData1->toArray());
             } else {
                 return response()->json(['code' => 200, 'message' => 'Card Like successfullly'], 200); 
             }
@@ -138,6 +131,7 @@ class CardsController extends Controller
             $data = GetMatch::where('user_id', $userid)->whereNotIn('user_id',$block)->pluck('match_with');
             if (count($data) != 0) {
                 foreach ($data as $value) {
+                
                     $new = DB::table('card_actions')->where('user_id', $value)->where('card_action', 1)->pluck('card_id')->toArray();
                     $old = DB::table('card_actions')->where('user_id', $userid)->where('card_action', 1)->pluck('card_id')->toArray();
                     // $count = DB::table('card_actions')->whereIn('card_id', $data)->where('card_action', 1)->where('user_id', $value)->get();
