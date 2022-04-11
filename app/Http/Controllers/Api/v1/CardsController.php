@@ -133,26 +133,19 @@ class CardsController extends Controller
         try {
 
             $userid = Auth::id();
-            $data = CardAction::where('user_id', $userid)->pluck('card_id');
+            $block = BlockUser::where('blocked_by',$userid)->where('status',1)->pluck('user_id');
+
+            $data = GetMatch::where('user_id', $userid)->whereNotIn('user_id',$block)->pluck('match_with');
             if (count($data) != 0) {
-                $block = BlockUser::where('blocked_by',$userid)->where('status',1)->pluck('user_id');
-                $same = DB::table('card_actions')->where('user_id', '!=', $userid)->whereIn('card_id', $data)->whereNotIn('user_id',$block)->where('card_action', 1)->select('user_id')->get();
-                if (empty($same)) {
-                    return response()->json(['statuscode' => 200, 'message' => 'data not found'], 200);
-                }
-                $users =  $same->unique('user_id');
-                $result = array();
-                 if (count($users) != 0) {
                 foreach ($users as $value) {
-                   
-                    $new = DB::table('card_actions')->where('user_id', $value->user_id)->where('card_action', 1)->pluck('card_id')->toArray();
-                    $old = DB::table('card_actions')->where('user_id', $userid)->where('card_action', 1)->pluck('card_id')->toArray();
-                    $count = DB::table('card_actions')->whereIn('card_id', $data)->where('card_action', 1)->where('user_id', $value->user_id)->get();
-                    $final = count($count) /  count($old) * 100;
-                    $result =  DB::table('users')->where('id', $value->user_id)->first();
+                    // $new = DB::table('card_actions')->where('user_id', $value)->where('card_action', 1)->pluck('card_id')->toArray();
+                    // $old = DB::table('card_actions')->where('user_id', $userid)->where('card_action', 1)->pluck('card_id')->toArray();
+                    // $count = DB::table('card_actions')->whereIn('card_id', $data)->where('card_action', 1)->where('user_id', $value)->get();
+                    // $final = count($count) /  count($old) * 100;
+                    $result =  DB::table('users')->where('id', $value)->first();
                     $cards = array_intersect($new,$old);
                     $carddata = Card::whereIn('id',$cards)->get();
-                    $usersdetail = ProfileImage::where('user_id',$value->user_id)->get();
+                    $usersdetail = ProfileImage::where('user_id',$value)->get();
                     $ab[] =  array(
                         "id" => $result->id,
                         "name" => $result->name,
@@ -174,7 +167,7 @@ class CardsController extends Controller
                         "user_type" => $result->user_type,
                         "age_preference_from" => $result->age_preference_from,
                         "age_preference_to" => $result->age_preference_to,
-                        'percentage' => $final,
+                        // 'percentage' => $final,
                         'cards'=>$carddata,
                         'profileImage'=>$usersdetail,
                         'user'=>Auth::user()
