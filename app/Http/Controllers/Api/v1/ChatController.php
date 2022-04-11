@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ChatUser;
 use App\Models\Notification;
+use App\Models\ProfileImage;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,11 +20,14 @@ class ChatController extends Controller
             $receiver_id = $data[$i]['receiver_id'];
             if($id != $sender_id){
                 $user = User::where('id',$sender_id)->first();
+                $profile = ProfileImage::where('user_id',$sender_id)->get();
             }else{
                 $user = User::where('id',$receiver_id)->first();
+                $profile = ProfileImage::where('user_id',$receiver_id)->get();
+
             }
             $data[$i]['user_name'] = $user->full_name;
-            $data[$i]['profile_photo'] = $user->profile_photo;
+            $data[$i]['profile_photo'] = $profile;
         }
         return response()->json(['statuscode' => 200, 'message' => 'chat list successfully', 'data' => $data], 200);
     }
