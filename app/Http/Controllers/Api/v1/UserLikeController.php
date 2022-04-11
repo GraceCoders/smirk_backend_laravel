@@ -32,7 +32,7 @@ class UserLikeController extends Controller
             $id = Auth::user();
             $title = "Smirk Notification";
             if($request->like == 1){
-                $message = $id->full_name."Like your profile";
+                $message = $id->full_name . "Like your profile";
             }else{
                 $message = $id->full_name."DisLike your profile";
             }
@@ -58,18 +58,18 @@ class UserLikeController extends Controller
                 $notification->save();
                 if(!empty($sender) && !empty($receiver)){
                     if($sender->user_id ==  $receiver->likedBy){
-                        $data = new ChatUser();
-                        $data->sender_id = $request->user_id;
-                        $data->receiver_id = $id->id;
-                        $data->status = 1;
-                        $data->save(); 
-                    }
+                            $data = new ChatUser();
+                            $data->sender_id = $request->user_id;
+                            $data->receiver_id = $id->id;
+                            $data->status = 1;
+                            $data->save(); 
+                      }
                 }      
                 if ($request->like == 1) {
                     $exsit = GetMatch::where('user_id',$id)->where('match_with',$request->user_id)->first();
                     if(empty($exsit)){
                         $data = new GetMatch();
-                         $data->user_id = $id;
+                         $data->user_id = $id->id;
                          $data->match_with = $request->user_id;
                          $data->status = 1;
                          $data->save();
@@ -90,14 +90,25 @@ class UserLikeController extends Controller
                 $this->push_notifications($userdata->device_token,$title,$message,$type);
                 if(!empty($sender) && !empty($receiver)){
                 if($sender->user_id ==  $receiver->likedBy){
-                    $data = new ChatUser();
-                    $data->sender_id = $request->user_id;
-                    $data->receiver_id = $id->id;
-                    $data->status = 1;
-                    $data->save(); 
+                    $ChatUser = ChatUser::where('receiver_id',$id->id)->where('sender_id',$request->user_id)->first();
+                    if($ChatUser){
+                        $data = new ChatUser();
+                        $data->sender_id = $request->user_id;
+                        $data->receiver_id = $id->id;
+                        $data->status = 1;
+                        $data->save(); 
+                    } 
                 }
             }
                 if ($request->like == 1) {
+                    $exsit = GetMatch::where('user_id',$id)->where('match_with',$request->user_id)->first();
+                    if(empty($exsit)){
+                        $data = new GetMatch();
+                         $data->user_id = $id->id;
+                         $data->match_with = $request->user_id;
+                         $data->status = 1;
+                         $data->save();
+                    } 
                     return response()->json(['statuscode' => 200, 'message' => 'user like successfully', 'data' => $user], 200);
                 }else{
                     return response()->json(['statuscode' => 200, 'message' => 'user dislike successfully', 'data' => $user], 200);
