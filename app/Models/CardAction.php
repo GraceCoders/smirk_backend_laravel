@@ -45,15 +45,17 @@ class CardAction extends Model
         })->with('user')->groupBy('user_id')->first();
 
         //Cards Count
-        $cardsCount = $cardAction->where('user_id', '!=', $userId)->where(function ($query) use ($likes, $disLikes) {
-            $query->Orwhere(function ($subQuery) use ($likes) {
-                $subQuery->whereIn('card_id', $likes)->where('card_action', 1);
-            });
-            $query->Orwhere(function ($subQuery) use ($disLikes) {
-                $subQuery->whereIn('card_id', $disLikes)->where('card_action', 0);
-            });
-        })->groupBy('user_id')->first()->count();
-        $cardActions->compatibility  = (($cardsCount / 10) * 100);
+  
+            $cardsCount = $cardAction->where('user_id', '!=', $userId)->where(function ($query) use ($likes, $disLikes) {
+                $query->Orwhere(function ($subQuery) use ($likes) {
+                    $subQuery->whereIn('card_id', $likes)->where('card_action', 1);
+                });
+                $query->Orwhere(function ($subQuery) use ($disLikes) {
+                    $subQuery->whereIn('card_id', $disLikes)->where('card_action', 0);
+                });
+            })->groupBy('user_id')->first()->count();
+            $cardActions->compatibility  = (($cardsCount / 10) * 100);
+
         return $cardActions;
     }
 }

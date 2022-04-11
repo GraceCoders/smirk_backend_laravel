@@ -115,7 +115,7 @@ class CardsController extends Controller
                      $data->status = 1;
                      $data->save();
                 }
-                $this->sendSuccessResponse(trans("Messages.cardActionSaved"), $getData1->toArray());
+                $this->sendSuccessResponse(trans("Messages.cardActionSaved"), $getData->toArray());
             } else {
                 return response()->json(['code' => 200, 'message' => 'Card Like successfullly'], 200); 
             }
