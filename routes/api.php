@@ -50,11 +50,10 @@ Route::prefix('/v1')->group(function () {
         //chat room api 
         Route::get('/chat-room', [ChatController::class, 'getRoom'])->name('chat-room');
         // notification 
+        Route::get('/get-notification', [ChatController::class, 'getNotification'])->name('get-notification');
 
 
     });
-    Route::get('/get-notification', [ChatController::class, 'getNotification'])->name('get-notification');
-
     Route::get('/retrieve-list', [UsersController::class, 'retrieveList'])->name('retrieve-list');
     Route::get('/cards-list', [CardsController::class, 'cardsList'])->name('cards-list');
 });
