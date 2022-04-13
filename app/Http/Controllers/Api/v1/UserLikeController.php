@@ -67,7 +67,8 @@ class UserLikeController extends Controller
                 }      
                 if ($request->like == 1) {
                     $exsit = GetMatch::where('user_id',$id)->where('match_with',$request->user_id)->first();
-                    if(empty($exsit)){
+                    $exsit1 = GetMatch::where('user_id',$request->user_id)->where('match_with',$id)->first();
+                    if(empty($exsit) || empty($exsit1)){
                         $data = new GetMatch();
                          $data->user_id = $id->id;
                          $data->match_with = $request->user_id;
@@ -102,7 +103,8 @@ class UserLikeController extends Controller
             }
                 if ($request->like == 1) {
                     $exsit = GetMatch::where('user_id',$id)->where('match_with',$request->user_id)->first();
-                    if(empty($exsit)){
+                    $exsit1 = GetMatch::where('user_id',$request->user_id)->where('match_with',$id)->first();
+                    if(empty($exsit) || empty($exsit1)){
                         $data = new GetMatch();
                          $data->user_id = $id->id;
                          $data->match_with = $request->user_id;
