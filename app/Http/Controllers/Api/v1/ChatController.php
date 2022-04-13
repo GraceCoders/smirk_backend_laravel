@@ -44,7 +44,7 @@ class ChatController extends Controller
         for($i=0;$i<count($data);$i++){
                 $profile = ProfileImage::where('user_id',$data[$i]->send_by)->first();
                 $data[$i]['profile_photo'] = $profile->profile_pic;
-                $data[$i]['created_at'] = $data[$i]->created_at->format('Y-m-d H:i:s');
+                $data[$i]['time'] = $data[$i]->created_at->format('Y-m-d H:i:s');
         }
         return response()->json(['statuscode' => 200, 'message' => 'Get Notification list successfully', 'data' => $data], 200);
     }
