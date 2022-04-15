@@ -116,7 +116,7 @@ class UsersController extends Controller
                 } else {
                     throw new Exception(trans("Messages.WrongOTP"));
                 }
-                $this->sendSuccessResponse(trans("Messages.ListedSuccessfully"), $user->toArray());
+                $this->sendSuccessResponse(trans("Messages.otp verify successfully"), $user->toArray());
             }
         } catch (Exception $exception) {
             $this->sendErrorOutput($exception);
